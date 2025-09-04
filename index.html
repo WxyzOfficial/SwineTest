@@ -1305,17 +1305,21 @@
         let currentUser = null;
         let currentPigToSell = null;
         let charts = {};
+        let chartInstances = {};
         let simulationInterval;
 
         // Authentication Functions
         function showLogin() {
-
+            // Destroy charts when switching to login
+            destroyAllCharts();
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('registerPage').style.display = 'none';
             document.getElementById('forgotPasswordPage').style.display = 'none';
         }
 
         function showRegister() {
+            // Destroy charts when switching to register
+            destroyAllCharts();
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'block';
             document.getElementById('forgotPasswordPage').style.display = 'none';
@@ -1325,6 +1329,19 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'none';
             document.getElementById('forgotPasswordPage').style.display = 'block';
+        }
+
+        function destroyChart(chartId) {
+            if (chartInstances[chartId]) {
+                chartInstances[chartId].destroy();
+                delete chartInstances[chartId];
+            }
+        }
+
+        function destroyAllCharts() {
+            Object.keys(chartInstances).forEach(chartId => {
+                destroyChart(chartId);
+            });
         }
 
         // Login Form Handler
@@ -1414,10 +1431,17 @@
             // Load initial data
             loadPigs();
             setupRealtimeListeners();
-            initializeCharts();
+            
+            // Small delay to ensure DOM is ready before initializing charts
+            setTimeout(() => {
+                initializeCharts();
+            }, 100);
         }
 
         function logout() {
+            // Destroy all charts before logging out
+            destroyAllCharts();
+            
             auth.signOut();
             stopDataSimulation();
             document.getElementById('authContainer').style.display = 'flex';
@@ -1697,6 +1721,18 @@
 
         // Charts and Statistics
         function initializeCharts() {
+            // Destroy existing charts before creating new ones
+            destroyAllCharts();
+
+            const tempCtx = document.getElementById('temperatureChart');
+            const humidityCtx = document.getElementById('humidityChart');
+            const bodyTempCtx = document.getElementById('pigTempChart');
+
+            if (!tempCtx || !humidityCtx || !bodyTempCtx) {
+                console.log('Chart canvases not found, skipping chart initialization');
+                return;
+            }
+
             const chartOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -1713,7 +1749,7 @@
             };
 
             // Temperature Chart
-            charts.temperature = new Chart(document.getElementById('temperatureChart'), {
+            chartInstances.temperature = new Chart(tempCtx, {
                 type: 'line',
                 data: {
                     labels: [],
@@ -1729,7 +1765,7 @@
             });
 
             // Humidity Chart
-            charts.humidity = new Chart(document.getElementById('humidityChart'), {
+            chartInstances.humidity = new Chart(humidityCtx, {
                 type: 'line',
                 data: {
                     labels: [],
@@ -1745,7 +1781,7 @@
             });
 
             // Pig Temperature Chart
-            charts.pigTemp = new Chart(document.getElementById('pigTempChart'), {
+            chartInstances.bodyTemp = new Chart(bodyTempCtx, {
                 type: 'line',
                 data: {
                     labels: [],
@@ -1762,7 +1798,7 @@
         }
 
         function updateCharts() {
-            if (!currentUser || !charts.temperature) return;
+            if (!chartInstances.temperature || !chartInstances.humidity || !chartInstances.bodyTemp) return;
 
             const filter = document.getElementById('dataFilter').value;
             const customDate = document.getElementById('customDate').value;
@@ -1783,17 +1819,17 @@
             }
 
             // Update charts
-            charts.temperature.data.labels = labels;
-            charts.temperature.data.datasets[0].data = tempData;
-            charts.temperature.update();
+            chartInstances.temperature.data.labels = labels;
+            chartInstances.temperature.data.datasets[0].data = tempData;
+            chartInstances.temperature.update();
 
-            charts.humidity.data.labels = labels;
-            charts.humidity.data.datasets[0].data = humidityData;
-            charts.humidity.update();
+            chartInstances.humidity.data.labels = labels;
+            chartInstances.humidity.data.datasets[0].data = humidityData;
+            chartInstances.humidity.update();
 
-            charts.pigTemp.data.labels = labels;
-            charts.pigTemp.data.datasets[0].data = pigTempData;
-            charts.pigTemp.update();
+            chartInstances.bodyTemp.data.labels = labels;
+            chartInstances.bodyTemp.data.datasets[0].data = pigTempData;
+            chartInstances.bodyTemp.update();
         }
 
         // Notifications
@@ -2093,3 +2129,4 @@
     </script>
 </body>
 </html>
+
