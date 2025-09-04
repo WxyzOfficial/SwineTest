@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwineCare - IoT Swine Monitoring System</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Pink Swine-themed Color Palette */
+            --primary-pink: #E91E63;
+            --secondary-pink: #F06292;
+            --light-pink: #FCE4EC;
+            --accent-pink: #FF4081;
+            --dark-pink: #C2185B;
+            --success-green: #4CAF50;
+            --warning-orange: #FF9800;
+            --error-red: #F44336;
+            --neutral-gray: #9E9E9E;
+            --light-gray: #F5F5F5;
+            --dark-gray: #424242;
+            --white: #FFFFFF;
+            --shadow: rgba(233, 30, 99, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            color: var(--dark-gray);
+            background: linear-gradient(135deg, var(--light-pink) 0%, var(--white) 100%);
+            min-height: 100vh;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://wxyzofficial.sirv.com/Personal/bg.png') center/cover;
+            position: relative;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(233, 30, 99, 0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-pink);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-pink);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-pink);
+            border: 2px solid var(--primary-pink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-pink);
+            color: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .auth-links a {
+            color: var(--primary-pink);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main App Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--light-gray);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--dark-pink));
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-pink);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: var(--error-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2);
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--dark-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--neutral-gray);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-pink);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px var(--shadow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--neutral-gray);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark-pink);
+        }
+
+        .stat-unit {
+            font-size: 0.875rem;
+            color: var(--neutral-gray);
+            margin-left: 0.25rem;
+        }
+
+        /* Camera View */
+        .camera-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .camera-view {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .camera-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Controls */
+        .controls-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .control-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-pink);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-pink);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .schedule-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light-pink);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Pig Management */
+        .pig-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .pig-list {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px var(--shadow);
+            overflow: hidden;
+        }
+
+        .pig-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pig-table th,
+        .pig-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-pink);
+        }
+
+        .pig-table th {
+            background: var(--light-pink);
+            font-weight: 600;
+            color: var(--dark-pink);
+        }
+
+        .pig-table tr:hover {
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-healthy {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-green);
+        }
+
+        .status-sold {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error-red);
+        }
+
+        .btn-sell {
+            background: var(--warning-orange);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-sell:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--light-pink);
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-pink);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--neutral-gray);
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--dark-gray);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border-left-color: var(--success-green);
+            color: var(--success-green);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border-left-color: var(--error-red);
+            color: var(--error-red);
+        }
+
+        .alert-warning {
+            background: rgba(255, 152, 0, 0.1);
+            border-left-color: var(--warning-orange);
+            color: var(--warning-orange);
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light-pink);
+            border-top: 4px solid var(--primary-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px var(--shadow);
+            border-left: 4px solid var(--primary-pink);
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-section {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-card {
+                margin: 1rem;
+                padding: 2rem;
+            }
+        }
+
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-pink);
+            border-radius: 3px;
+        }
+
+        /* Chart responsiveness */
+        .chart-canvas {
+            max-width: 100%;
+            height: 300px !important;
+        }
+
+        /* Additional utility classes */
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .gap-1 { gap: 1rem; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <!-- Authentication Pages -->
+    <div id="authContainer" class="auth-container">
+        <!-- Login Page -->
+        <div id="loginPage" class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
+                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">SwineCare</h1>
+                <p style="color: var(--neutral-gray);">IoT Swine Monitoring System</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" required>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showForgotPassword()">Forgot Password?</a> | 
+                    <a href="#" onclick="showRegister()">Create Account</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
+                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">Create Account</h1>
+                <p style="color: var(--neutral-gray);">Join SwineCare Today</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showLogin()">Already have an account? Sign In</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Forgot Password Page -->
+        <div id="forgotPasswordPage" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
+                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">Reset Password</h1>
+                <p style="color: var(--neutral-gray);">Enter your email to reset password</p>
+            </div>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="resetEmail">Email Address</label>
+                    <input type="email" id="resetEmail" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showLogin()">Back to Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="appContainer" class="app-container" style="display: none;">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SwineCare</div>
+                <div class="sidebar-subtitle">IoT Monitoring System</div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showPage('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('pigs')">
+                        <i class="fas fa-piggy-bank"></i>
+                        Pig Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('statistics')">
+                        <i class="fas fa-chart-line"></i>
+                        Data & Statistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('notifications')">
+                        <i class="fas fa-bell"></i>
+                        Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('reports')">
+                        <i class="fas fa-file-pdf"></i>
+                        Reports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userName">User</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page-content active">
+                <div class="page-header">
+                    <h1 class="page-title">Real-Time Monitoring Dashboard</h1>
+                    <p class="page-subtitle">Monitor your swine health and environment in real-time</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Registered Pigs</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="pigCount">0</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Temperature</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-thermometer-half"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="temperature">--<span class="stat-unit">°C</span></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Humidity</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="humidity">--<span class="stat-unit">%</span></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Pig Body Temp</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="pigBodyTemp">--<span class="stat-unit">°C</span></div>
+                    </div>
+                </div>
+
+                <!-- Camera Section -->
+                <div class="camera-section">
+                    <div class="chart-header">
+                        <h3>Live Camera Monitoring</h3>
+                        <div class="camera-controls">
+                            <button class="btn btn-secondary" onclick="switchCamera('behavior')">
+                                <i class="fas fa-eye"></i> Behavior Cam
+                            </button>
+                            <button class="btn btn-secondary" onclick="switchCamera('thermal')">
+                                <i class="fas fa-thermometer-half"></i> Thermal Cam
+                            </button>
+                        </div>
+                    </div>
+                    <div class="camera-view">
+                        <div class="camera-placeholder" id="cameraFeed">
+                            <div style="text-align: center;">
+                                <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <div>Live Camera Feed - Behavior Monitoring</div>
+                                <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">ESP32 Camera Feed Active</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls Section -->
+                <div class="controls-section">
+                    <div class="control-card">
+                        <div class="control-header">
+                            <span class="control-title">Automatic Feeder</span>
+                            <label class="switch">
+                                <input type="checkbox" id="feederSwitch" onchange="toggleFeeder()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="feedSchedule">Feeding Schedule</label>
+                            <input type="time" id="feedSchedule" class="schedule-input" value="08:00">
+                            <input type="time" id="feedSchedule2" class="schedule-input" value="16:00" style="margin-top: 0.5rem;">
+                            <button class="btn btn-secondary mt-2" onclick="manualFeed()" style="width: 100%;">
+                                <i class="fas fa-play"></i> Feed Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-card">
+                        <div class="control-header">
+                            <span class="control-title">Water Shower</span>
+                            <label class="switch">
+                                <input type="checkbox" id="showerSwitch" onchange="toggleShower()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="showerSchedule">Shower Schedule</label>
+                            <input type="time" id="showerSchedule" class="schedule-input" value="12:00">
+                            <input type="time" id="showerSchedule2" class="schedule-input" value="18:00" style="margin-top: 0.5rem;">
+                            <button class="btn btn-secondary mt-2" onclick="manualShower()" style="width: 100%;">
+                                <i class="fas fa-shower"></i> Shower Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pig Management Page -->
+            <div id="pigsPage" class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Pig Management</h1>
+                    <p class="page-subtitle">Register and manage your swine inventory</p>
+                </div>
+
+                <!-- Pig Registration Form -->
+                <div class="pig-form">
+                    <h3 style="margin-bottom: 1rem; color: var(--dark-pink);">Register New Pig</h3>
+                    <form id="pigForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pigTag">Tag Number</label>
+                                <input type="text" id="pigTag" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pigBreed">Breed</label>
+                                <select id="pigBreed" class="form-input" required>
+                                    <option value="">Select Breed</option>
+                                    <option value="Landrace">Landrace</option>
+                                    <option value="Yorkshire">Yorkshire</option>
+                                    <option value="Duroc">Duroc</option>
+                                    <option value="Hampshire">Hampshire</option>
+                                    <option value="Native">Native</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pigAge">Age (months)</label>
+                                <input type="number" id="pigAge" class="form-input" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pigWeight">Weight (kg)</label>
+                                <input type="number" id="pigWeight" class="form-input" step="0.1" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pigGender">Gender</label>
+                                <select id="pigGender" class="form-input" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pigLength">Length (cm)</label>
+                                <input type="number" id="pigLength" class="form-input" min="10" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register Pig</button>
+                    </form>
+                </div>
+
+                <!-- Pig List -->
+                <div class="pig-list">
+                    <div style="padding: 1rem; background: var(--light-pink);">
+                        <h3 style="color: var(--dark-pink);">Registered Pigs</h3>
+                    </div>
+                    <table class="pig-table">
+                        <thead>
+                            <tr>
+                                <th>Tag #</th>
+                                <th>Breed</th>
+                                <th>Age (months)</th>
+                                <th>Weight (kg)</th>
+                                <th>Gender</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pigTableBody">
+                            <!-- Pig rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Statistics Page -->
+            <div id="statisticsPage" class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Data & Statistics</h1>
+                    <p class="page-subtitle">Analyze your swine health and environmental data</p>
+                </div>
+
+                <!-- Chart Filters -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Data Filters</h3>
+                        <div class="chart-filters">
+                            <select id="dataFilter" class="filter-select">
+                                <option value="24h">Last 24 Hours</option>
+                                <option value="7d">Last 7 Days</option>
+                                <option value="30d">Last 30 Days</option>
+                            </select>
+                            <input type="date" id="customDate" class="filter-select">
+                            <button class="btn btn-secondary" onclick="updateCharts()">
+                                <i class="fas fa-sync"></i> Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temperature Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Temperature Monitoring</h3>
+                    </div>
+                    <canvas id="temperatureChart" class="chart-canvas"></canvas>
+                </div>
+
+                <!-- Humidity Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Humidity Monitoring</h3>
+                    </div>
+                    <canvas id="humidityChart" class="chart-canvas"></canvas>
+                </div>
+
+                <!-- Pig Body Temperature Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Pig Body Temperature</h3>
+                    </div>
+                    <canvas id="pigTempChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Notifications Page -->
+            <div id="notificationsPage" class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Notifications & Alerts</h1>
+                    <p class="page-subtitle">Monitor health warnings and system alerts</p>
+                </div>
+
+                <div id="notificationsList" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Notifications will be populated here -->
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reportsPage" class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Reports & Export</h1>
+                    <p class="page-subtitle">Generate and export detailed reports</p>
+                </div>
+
+                <!-- Report Filters -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Report Generation</h3>
+                        <div class="chart-filters">
+                            <input type="date" id="reportStartDate" class="filter-select">
+                            <input type="date" id="reportEndDate" class="filter-select">
+                            <button class="btn btn-primary" onclick="generateReport()">
+                                <i class="fas fa-file-pdf"></i> Generate PDF Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Preview -->
+                <div id="reportPreview" class="chart-container">
+                    <div class="chart-header">
+                        <h3 style="color: var(--dark-pink);">Report Preview</h3>
+                    </div>
+                    <div id="reportContent">
+                        <p style="text-align: center; color: var(--neutral-gray); padding: 2rem;">
+                            Select date range and click "Generate PDF Report" to preview
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Sell Pig Modal -->
+    <div id="sellPigModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Sell Pig</h3>
+                <button class="close-btn" onclick="closeSellModal()">&times;</button>
+            </div>
+            <form id="sellPigForm">
+                <div class="form-group">
+                    <label for="sellAmount">Sale Amount (₱)</label>
+                    <input type="number" id="sellAmount" class="form-input" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="buyerName">Buyer Name (Optional)</label>
+                    <input type="text" id="buyerName" class="form-input">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeSellModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Sale</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notificationToast" class="notification">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-exclamation-triangle" style="color: var(--warning-orange);"></i>
+            <span id="notificationMessage"></span>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAKTPpU7RsfqIrOrp9o98JnCL-RbUVWNs",
+            authDomain: "capstone-996a3.firebaseapp.com",
+            projectId: "capstone-996a3",
+            storageBucket: "capstone-996a3.firebasestorage.app",
+            messagingSenderId: "297091452987",
+            appId: "1:297091452987:web:a68ccf7b53b6b69d80cc1e",
+            databaseURL: "https://capstone-996a3-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const firestore = firebase.firestore();
+
+        // Global Variables
+        let currentUser = null;
+        let currentPigToSell = null;
+        let charts = {};
+        let simulationInterval;
+
+        // Authentication Functions
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('forgotPasswordPage').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'block';
+            document.getElementById('forgotPasswordPage').style.display = 'none';
+        }
+
+        function showForgotPassword() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('forgotPasswordPage').style.display = 'block';
+        }
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                if (rememberMe) {
+                    localStorage.setItem('rememberMe', 'true');
+                    localStorage.setItem('userEmail', email);
+                } else {
+                    localStorage.removeItem('rememberMe');
+                    localStorage.removeItem('userEmail');
+                }
+
+                showMainApp();
+                startDataSimulation();
+                showNotification('Welcome back to SwineCare!', 'success');
+            } catch (error) {
+                showNotification(`Login failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Register Form Handler
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await userCredential.user.updateProfile({ displayName: name });
+                
+                // Create user profile in Firestore
+                await firestore.collection('users').doc(userCredential.user.uid).set({
+                    name: name,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                currentUser = userCredential.user;
+                showMainApp();
+                startDataSimulation();
+                showNotification('Account created successfully! Welcome to SwineCare!', 'success');
+            } catch (error) {
+                showNotification(`Registration failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Forgot Password Handler
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+
+            try {
+                await auth.sendPasswordResetEmail(email);
+                showNotification('Password reset email sent successfully!', 'success');
+                showLogin();
+            } catch (error) {
+                showNotification(`Reset failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Main App Functions
+        function showMainApp() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'flex';
+            
+            // Update user info
+            const displayName = currentUser.displayName || 'User';
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userAvatar').textContent = displayName.charAt(0).toUpperCase();
+            
+            // Load initial data
+            loadPigs();
+            setupRealtimeListeners();
+            initializeCharts();
+        }
+
+        function logout() {
+            auth.signOut();
+            stopDataSimulation();
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('appContainer').style.display = 'none';
+            showLogin();
+            showNotification('Logged out successfully', 'success');
+        }
+
+        // Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId + 'Page').classList.add('active');
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'dashboard': 'Dashboard',
+                'pigs': 'Pig Management',
+                'statistics': 'Data & Statistics',
+                'notifications': 'Notifications',
+                'reports': 'Reports'
+            };
+            document.getElementById('pageTitle').textContent = titles[pageId];
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('mobile-hidden');
+            mainContent.classList.toggle('full-width');
+        }
+
+        // IoT Data Simulation
+        function startDataSimulation() {
+            // Simulate real-time data updates every 5 seconds
+            simulationInterval = setInterval(() => {
+                updateSensorData();
+                checkHealthAlerts();
+            }, 5000);
+            
+            // Initial data load
+            updateSensorData();
+        }
+
+        function stopDataSimulation() {
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+            }
+        }
+
+        function updateSensorData() {
+            if (!currentUser) return;
+
+            // Simulate sensor data
+            const temperature = (25 + Math.random() * 10).toFixed(1);
+            const humidity = (60 + Math.random() * 20).toFixed(1);
+            const pigBodyTemp = (38 + Math.random() * 3).toFixed(1);
+
+            // Update UI
+            document.getElementById('temperature').innerHTML = `${temperature}<span class="stat-unit">°C</span>`;
+            document.getElementById('humidity').innerHTML = `${humidity}<span class="stat-unit">%</span>`;
+            document.getElementById('pigBodyTemp').innerHTML = `${pigBodyTemp}<span class="stat-unit">°C</span>`;
+
+            // Save to Firebase
+            const timestamp = Date.now();
+            const sensorData = {
+                temperature: parseFloat(temperature),
+                humidity: parseFloat(humidity),
+                pigBodyTemp: parseFloat(pigBodyTemp),
+                timestamp: timestamp,
+                userId: currentUser.uid
+            };
+
+            database.ref(`sensorData/${currentUser.uid}/${timestamp}`).set(sensorData);
+        }
+
+        function checkHealthAlerts() {
+            const temperature = parseFloat(document.getElementById('temperature').textContent);
+            const humidity = parseFloat(document.getElementById('humidity').textContent);
+            const pigBodyTemp = parseFloat(document.getElementById('pigBodyTemp').textContent);
+
+            if (temperature > 35) {
+                addNotification('High Temperature Alert', `Temperature is ${temperature}°C - Above normal range`, 'warning');
+            }
+            if (humidity > 85) {
+                addNotification('High Humidity Alert', `Humidity is ${humidity}% - Risk of disease`, 'warning');
+            }
+            if (pigBodyTemp > 40) {
+                addNotification('Pig Health Alert', `Pig body temperature is ${pigBodyTemp}°C - Possible fever`, 'error');
+            }
+        }
+
+        // Camera Functions
+        function switchCamera(type) {
+            const cameraFeed = document.getElementById('cameraFeed');
+            if (type === 'behavior') {
+                cameraFeed.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <div>Live Camera Feed - Behavior Monitoring</div>
+                        <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">ESP32 Camera Feed Active</div>
+                    </div>
+                `;
+            } else if (type === 'thermal') {
+                cameraFeed.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <i class="fas fa-thermometer-half" style="font-size: 3rem; margin-bottom: 1rem; color: #FF6B6B;"></i>
+                        <div>Infrared Thermal Camera</div>
+                        <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">Body Temperature Monitoring Active</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Control Functions
+        function toggleFeeder() {
+            const isEnabled = document.getElementById('feederSwitch').checked;
+            showNotification(`Automatic Feeder ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+            
+            if (currentUser) {
+                database.ref(`controls/${currentUser.uid}/feeder`).set({
+                    enabled: isEnabled,
+                    lastUpdated: Date.now()
+                });
+            }
+        }
+
+        function toggleShower() {
+            const isEnabled = document.getElementById('showerSwitch').checked;
+            showNotification(`Water Shower ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+            
+            if (currentUser) {
+                database.ref(`controls/${currentUser.uid}/shower`).set({
+                    enabled: isEnabled,
+                    lastUpdated: Date.now()
+                });
+            }
+        }
+
+        function manualFeed() {
+            showNotification('Manual feeding activated', 'success');
+            addNotification('Manual Feed', 'Manual feeding session started', 'info');
+            
+            if (currentUser) {
+                database.ref(`feedLogs/${currentUser.uid}/${Date.now()}`).set({
+                    type: 'manual',
+                    timestamp: Date.now(),
+                    amount: '2.5kg' // Simulated
+                });
+            }
+        }
+
+        function manualShower() {
+            showNotification('Water shower activated', 'success');
+            addNotification('Manual Shower', 'Water shower session started', 'info');
+            
+            if (currentUser) {
+                database.ref(`showerLogs/${currentUser.uid}/${Date.now()}`).set({
+                    type: 'manual',
+                    timestamp: Date.now(),
+                    duration: '10 minutes' // Simulated
+                });
+            }
+        }
+
+        // Pig Management Functions
+        document.getElementById('pigForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const pigData = {
+                tagNumber: document.getElementById('pigTag').value,
+                breed: document.getElementById('pigBreed').value,
+                age: parseInt(document.getElementById('pigAge').value),
+                weight: parseFloat(document.getElementById('pigWeight').value),
+                length: parseInt(document.getElementById('pigLength').value),
+                gender: document.getElementById('pigGender').value,
+                status: 'healthy',
+                registrationDate: Date.now(),
+                userId: currentUser.uid
+            };
+
+            try {
+                await firestore.collection('pigs').add(pigData);
+                document.getElementById('pigForm').reset();
+                loadPigs();
+                showNotification('Pig registered successfully!', 'success');
+            } catch (error) {
+                showNotification(`Registration failed: ${error.message}`, 'error');
+            }
+        });
+
+        async function loadPigs() {
+            if (!currentUser) return;
+
+            try {
+                const snapshot = await firestore.collection('pigs')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+
+                const tableBody = document.getElementById('pigTableBody');
+                tableBody.innerHTML = '';
+                
+                let totalPigs = 0;
+                
+                snapshot.forEach(doc => {
+                    const pig = doc.data();
+                    totalPigs++;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${pig.tagNumber}</td>
+                        <td>${pig.breed}</td>
+                        <td>${pig.age}</td>
+                        <td>${pig.weight}</td>
+                        <td>${pig.gender}</td>
+                        <td><span class="status-badge status-${pig.status}">${pig.status}</span></td>
+                        <td>
+                            ${pig.status !== 'sold' ? 
+                                `<button class="btn-sell" onclick="openSellModal('${doc.id}')">
+                                    <i class="fas fa-dollar-sign"></i> Sell
+                                </button>` : 
+                                '<span style="color: var(--neutral-gray);">Sold</span>'
+                            }
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                document.getElementById('pigCount').textContent = totalPigs;
+            } catch (error) {
+                showNotification(`Failed to load pigs: ${error.message}`, 'error');
+            }
+        }
+
+        function openSellModal(pigId) {
+            currentPigToSell = pigId;
+            document.getElementById('sellPigModal').classList.add('show');
+        }
+
+        function closeSellModal() {
+            currentPigToSell = null;
+            document.getElementById('sellPigModal').classList.remove('show');
+            document.getElementById('sellPigForm').reset();
+        }
+
+        document.getElementById('sellPigForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentPigToSell) return;
+
+            const saleAmount = parseFloat(document.getElementById('sellAmount').value);
+            const buyerName = document.getElementById('buyerName').value;
+
+            try {
+                await firestore.collection('pigs').doc(currentPigToSell).update({
+                    status: 'sold',
+                    saleAmount: saleAmount,
+                    buyerName: buyerName || 'N/A',
+                    saleDate: Date.now()
+                });
+
+                closeSellModal();
+                loadPigs();
+                showNotification(`Pig sold successfully for ₱${saleAmount.toLocaleString()}`, 'success');
+            } catch (error) {
+                showNotification(`Sale failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Charts and Statistics
+        function initializeCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            };
+
+            // Temperature Chart
+            charts.temperature = new Chart(document.getElementById('temperatureChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: [],
+                        borderColor: '#E91E63',
+                        backgroundColor: 'rgba(233, 30, 99, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Humidity Chart
+            charts.humidity = new Chart(document.getElementById('humidityChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Humidity (%)',
+                        data: [],
+                        borderColor: '#03A9F4',
+                        backgroundColor: 'rgba(3, 169, 244, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Pig Temperature Chart
+            charts.pigTemp = new Chart(document.getElementById('pigTempChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Pig Body Temperature (°C)',
+                        data: [],
+                        borderColor: '#FF4081',
+                        backgroundColor: 'rgba(255, 64, 129, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: chartOptions
+            });
+        }
+
+        function updateCharts() {
+            if (!currentUser || !charts.temperature) return;
+
+            const filter = document.getElementById('dataFilter').value;
+            const customDate = document.getElementById('customDate').value;
+
+            // Simulate chart data updates
+            const now = new Date();
+            const labels = [];
+            const tempData = [];
+            const humidityData = [];
+            const pigTempData = [];
+
+            for (let i = 11; i >= 0; i--) {
+                const time = new Date(now.getTime() - (i * 2 * 60 * 60 * 1000));
+                labels.push(time.toLocaleTimeString());
+                tempData.push(25 + Math.random() * 10);
+                humidityData.push(60 + Math.random() * 20);
+                pigTempData.push(38 + Math.random() * 3);
+            }
+
+            // Update charts
+            charts.temperature.data.labels = labels;
+            charts.temperature.data.datasets[0].data = tempData;
+            charts.temperature.update();
+
+            charts.humidity.data.labels = labels;
+            charts.humidity.data.datasets[0].data = humidityData;
+            charts.humidity.update();
+
+            charts.pigTemp.data.labels = labels;
+            charts.pigTemp.data.datasets[0].data = pigTempData;
+            charts.pigTemp.update();
+        }
+
+        // Notifications
+        function addNotification(title, message, type) {
+            const notificationsList = document.getElementById('notificationsList');
+            
+            const notificationEl = document.createElement('div');
+            notificationEl.className = `alert alert-${type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'success'}`;
+            notificationEl.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <strong>${title}</strong>
+                        <div style="margin-top: 0.25rem;">${message}</div>
+                        <small style="opacity: 0.7;">${new Date().toLocaleString()}</small>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            notificationsList.insertBefore(notificationEl, notificationsList.firstChild);
+
+            // Save to Firebase
+            if (currentUser) {
+                firestore.collection('notifications').add({
+                    title: title,
+                    message: message,
+                    type: type,
+                    timestamp: Date.now(),
+                    userId: currentUser.uid,
+                    read: false
+                });
+            }
+        }
+
+        function showNotification(message, type) {
+            const toast = document.getElementById('notificationToast');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            messageEl.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Reports Generation
+        function generateReport() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+
+            if (!startDate || !endDate) {
+                showNotification('Please select both start and end dates', 'error');
+                return;
+            }
+
+            generatePDFReport(startDate, endDate);
+        }
+
+        async function generatePDFReport(startDate, endDate) {
+            try {
+                // Get pigs data
+                const pigsSnapshot = await firestore.collection('pigs')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+
+                let totalPigs = 0;
+                let totalWeight = 0;
+                let healthyPigs = 0;
+                let soldPigs = 0;
+                const pigsData = [];
+
+                pigsSnapshot.forEach(doc => {
+                    const pig = doc.data();
+                    pigsData.push(pig);
+                    totalPigs++;
+                    totalWeight += pig.weight;
+                    if (pig.status === 'healthy') healthyPigs++;
+                    if (pig.status === 'sold') soldPigs++;
+                });
+
+                // Create PDF content
+                const reportContent = document.getElementById('reportContent');
+                reportContent.innerHTML = `
+                    <div id="pdfContent" style="font-family: Arial, sans-serif; padding: 2rem;">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <h1 style="color: #E91E63; margin-bottom: 0.5rem;">SwineCare Report</h1>
+                            <p style="color: #666;">Swine Health Monitoring Report</p>
+                            <p style="color: #666;">Period: ${startDate} to ${endDate}</p>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Summary</h2>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+                                <tr style="background: #FCE4EC;">
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Total Registered Pigs</td>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${totalPigs}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Total Weight</td>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${totalWeight.toFixed(1)} kg</td>
+                                </tr>
+                                <tr style="background: #FCE4EC;">
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Healthy Pigs</td>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${healthyPigs}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Sold Pigs</td>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${soldPigs}</td>
+                                </tr>
+                                <tr style="background: #FCE4EC;">
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Estimated Feed Consumption</td>
+                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${(totalPigs * 2.5).toFixed(1)} kg/day</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Pig Inventory Details</h2>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #E91E63; color: white;">
+                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Tag #</th>
+                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Breed</th>
+                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Weight (kg)</th>
+                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Length (cm)</th>
+                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${pigsData.map((pig, index) => `
+                                        <tr style="background: ${index % 2 === 0 ? '#FCE4EC' : 'white'};">
+                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.tagNumber}</td>
+                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.breed}</td>
+                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.weight}</td>
+                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.length}</td>
+                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.status}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Health Observations</h2>
+                            <p style="margin-bottom: 1rem;">Clinical signs observed during the reporting period:</p>
+                            <ul style="margin-left: 2rem; line-height: 1.6;">
+                                <li>No significant lethargy observed in monitored pigs</li>
+                                <li>Normal respiratory patterns - no abnormal coughing detected</li>
+                                <li>No lameness detected in movement patterns</li>
+                                <li>Normal feeding behavior observed through automated monitoring</li>
+                                <li>Body temperature readings within normal range (38-40°C)</li>
+                            </ul>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+                            <p style="color: #666; font-size: 0.875rem;">
+                                Generated on ${new Date().toLocaleString()}<br>
+                                SwineCare IoT Monitoring System
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                // Generate PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const element = document.getElementById('pdfContent');
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save(`SwineCare_Report_${startDate}_to_${endDate}.pdf`);
+                showNotification('PDF report generated successfully!', 'success');
+
+            } catch (error) {
+                showNotification(`Report generation failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Setup Realtime Listeners
+        function setupRealtimeListeners() {
+            if (!currentUser) return;
+
+            // Listen for sensor data changes
+            database.ref(`sensorData/${currentUser.uid}`).limitToLast(1).on('child_added', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('temperature').innerHTML = `${data.temperature}<span class="stat-unit">°C</span>`;
+                    document.getElementById('humidity').innerHTML = `${data.humidity}<span class="stat-unit">%</span>`;
+                    document.getElementById('pigBodyTemp').innerHTML = `${data.pigBodyTemp}<span class="stat-unit">°C</span>`;
+                }
+            });
+
+            // Listen for pig changes
+            firestore.collection('pigs')
+                .where('userId', '==', currentUser.uid)
+                .onSnapshot((snapshot) => {
+                    loadPigs();
+                });
+        }
+
+        // Check for remembered user on page load
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('rememberMe') === 'true') {
+                const savedEmail = localStorage.getItem('userEmail');
+                if (savedEmail) {
+                    document.getElementById('loginEmail').value = savedEmail;
+                    document.getElementById('rememberMe').checked = true;
+                }
+            }
+
+            // Set default dates for report
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            document.getElementById('reportStartDate').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
+        });
+
+        // Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                showMainApp();
+                startDataSimulation();
+            } else {
+                currentUser = null;
+                stopDataSimulation();
+                document.getElementById('authContainer').style.display = 'flex';
+                document.getElementById('appContainer').style.display = 'none';
+            }
+        });
+
+        // Initialize charts when statistics page is first shown
+        let chartsInitialized = false;
+        const originalShowPage = showPage;
+        showPage = function(pageId) {
+            originalShowPage.call(this, pageId);
+            if (pageId === 'statistics' && !chartsInitialized) {
+                setTimeout(() => {
+                    initializeCharts();
+                    updateCharts();
+                    chartsInitialized = true;
+                }, 100);
+            }
+        };
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('sellPigModal');
+            if (event.target === modal) {
+                closeSellModal();
+            }
+        };
+
+        // Add some sample notifications on load
+        setTimeout(() => {
+            if (currentUser) {
+                addNotification('System Started', 'SwineCare monitoring system is now active', 'info');
+            }
+        }, 2000);
+
+        // Simulate periodic health checks
+        setInterval(() => {
+            if (currentUser && Math.random() < 0.1) { // 10% chance every interval
+                const alerts = [
+                    { title: 'Feed Level Low', message: 'Automatic feeder needs refill', type: 'warning' },
+                    { title: 'Normal Health Check', message: 'All pigs showing normal behavior', type: 'success' },
+                    { title: 'Cleaning Reminder', message: 'Pen cleaning scheduled for today', type: 'info' }
+                ];
+                const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+                addNotification(randomAlert.title, randomAlert.message, randomAlert.type);
+            }
+        }, 30000); // Every 30 seconds
+    </script>
+</body>
+</html>
