@@ -1309,7 +1309,6 @@
 
         // Authentication Functions
         function showLogin() {
-            destroyAllCharts();
 
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('registerPage').style.display = 'none';
@@ -1326,20 +1325,6 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'none';
             document.getElementById('forgotPasswordPage').style.display = 'block';
-        }
-
-        
-        function destroyChart(chartId) {
-            if (chartInstances[chartId]) {
-                chartInstances[chartId].destroy();
-                delete chartInstances[chartId];
-            }
-        }
-
-        function destroyAllCharts() {
-            Object.keys(chartInstances).forEach(chartId => {
-                destroyChart(chartId);
-            });
         }
 
         // Login Form Handler
