@@ -14,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +23,6 @@
         }
 
         :root {
-            /* Pink Swine-themed Color Palette */
             --primary-pink: #E91E63;
             --secondary-pink: #F06292;
             --light-pink: #FCE4EC;
@@ -31,20 +32,25 @@
             --warning-orange: #FF9800;
             --error-red: #F44336;
             --neutral-gray: #9E9E9E;
-            --light-gray: #F5F5F5;
+            --light-gray: #F8F9FA;
             --dark-gray: #424242;
             --white: #FFFFFF;
-            --shadow: rgba(233, 30, 99, 0.1);
+            --shadow: rgba(233, 30, 99, 0.08);
+            --shadow-lg: rgba(233, 30, 99, 0.15);
+            --border-color: #E8E8E8;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
             color: var(--dark-gray);
-            background: linear-gradient(135deg, var(--light-pink) 0%, var(--white) 100%);
+            background: var(--light-gray);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Auth Pages - Glassmorphism Style */
         /* Auth Pages */
         .auth-container {
             min-height: 100vh;
@@ -66,34 +72,68 @@
             backdrop-filter: blur(8px);
         }
 
+        .auth-container::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(240, 98, 146, 0.2), transparent);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-20px) translateX(10px); }
+        }
+
         .auth-card {
             background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px var(--shadow);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 450px;
+            max-width: 460px;
             position: relative;
             z-index: 1;
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .auth-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .auth-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
-            border-radius: 50%;
-            margin: 0 auto 1rem;
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--accent-pink));
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
+        }
+
+        .auth-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink), var(--dark-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--neutral-gray);
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .form-group {
@@ -102,49 +142,58 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             font-weight: 600;
-            color: var(--dark-pink);
+            color: var(--dark-gray);
+            font-size: 0.9rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--light-pink);
+            padding: 0.95rem 1.2rem;
+            border: 2px solid var(--border-color);
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
             background: var(--white);
+            font-family: 'Inter', sans-serif;
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary-pink);
-            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+            background: rgba(233, 30, 99, 0.02);
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.08);
         }
 
         .btn {
             padding: 1rem 2rem;
             border: none;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            font-family: 'Inter', sans-serif;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            background: linear-gradient(135deg, var(--primary-pink), var(--accent-pink));
             color: white;
             width: 100%;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px var(--shadow);
+            box-shadow: 0 12px 28px rgba(233, 30, 99, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
@@ -156,28 +205,38 @@
         .btn-secondary:hover {
             background: var(--primary-pink);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(233, 30, 99, 0.2);
         }
 
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
         .auth-links {
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: 1.75rem;
+            font-size: 0.9rem;
         }
 
         .auth-links a {
             color: var(--primary-pink);
             text-decoration: none;
             font-weight: 600;
+            transition: all 0.2s;
         }
 
         .auth-links a:hover {
-            text-decoration: underline;
+            color: var(--dark-pink);
         }
 
         /* Main App Layout */
@@ -189,14 +248,15 @@
 
         .sidebar {
             width: 280px;
-            background: linear-gradient(135deg, var(--primary-pink), var(--dark-pink));
+            background: linear-gradient(180deg, var(--primary-pink) 0%, var(--dark-pink) 100%);
             color: white;
-            padding: 2rem 0;
+            padding: 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             transition: transform 0.3s ease;
             z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar.mobile-hidden {
@@ -205,48 +265,62 @@
 
         .sidebar-header {
             text-align: center;
-            padding: 0 1.5rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.5px;
         }
 
         .sidebar-subtitle {
-            font-size: 0.875rem;
-            opacity: 0.8;
+            font-size: 0.8rem;
+            opacity: 0.85;
+            font-weight: 500;
         }
 
         .nav-menu {
             list-style: none;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
         }
 
         .nav-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+            padding: 0 1rem;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 1rem 1.5rem;
-            color: white;
+            padding: 1rem 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
             transition: all 0.3s ease;
-            border-left: 4px solid transparent;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: white;
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .nav-link i {
-            width: 20px;
+            width: 22px;
             margin-right: 1rem;
+            font-size: 1.1rem;
         }
 
         .main-content {
@@ -254,6 +328,7 @@
             margin-left: 280px;
             padding: 2rem;
             transition: margin-left 0.3s ease;
+            min-height: 100vh;
         }
 
         .main-content.full-width {
@@ -262,13 +337,14 @@
 
         .top-bar {
             background: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1.2rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .mobile-menu-btn {
@@ -287,30 +363,40 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--accent-pink));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+        }
+
+        .user-profile span {
+            font-weight: 600;
+            color: var(--dark-gray);
         }
 
         .logout-btn {
-            background: var(--error-red);
+            background: linear-gradient(135deg, var(--error-red), #E53935);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.65rem 1.2rem;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
         }
 
         .logout-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.3);
         }
 
         /* Page Content */
@@ -320,11 +406,11 @@
 
         .page-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeInUp 0.4s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -334,95 +420,118 @@
 
         .page-title {
             font-size: 2rem;
-            color: var(--dark-pink);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink), var(--dark-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
         }
 
         .page-subtitle {
             color: var(--neutral-gray);
+            font-size: 0.95rem;
         }
 
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px var(--shadow);
+            padding: 1.8rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
-            border-left: 4px solid var(--primary-pink);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-pink), var(--accent-pink));
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px var(--shadow);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.12);
         }
 
         .stat-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
         }
 
         .stat-title {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--neutral-gray);
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .stat-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(255, 64, 129, 0.1));
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--primary-pink);
+            font-size: 1.3rem;
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--dark-pink);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark-gray);
+            letter-spacing: -1px;
         }
 
         .stat-unit {
-            font-size: 0.875rem;
+            font-size: 1rem;
             color: var(--neutral-gray);
-            margin-left: 0.25rem;
+            margin-left: 0.3rem;
+            font-weight: 600;
         }
 
-        /* Camera View */
+        /* Camera Section */
         .camera-section {
             background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 24px var(--shadow);
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .camera-controls {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
         }
 
         .camera-view {
             width: 100%;
-            height: 300px;
-            background: #000;
-            border-radius: 12px;
+            height: 320px;
+            background: #1a1a1a;
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
         .camera-placeholder {
@@ -431,43 +540,53 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
+            flex-direction: column;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .camera-placeholder i {
+            font-size: 3.5rem;
+            margin-bottom: 1.2rem;
+            opacity: 0.6;
         }
 
         /* Controls */
         .controls-section {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
 
         .control-card {
             background: white;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px var(--shadow);
+            padding: 1.8rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
         }
 
         .control-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 2px solid var(--light-gray);
         }
 
         .control-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark-pink);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--dark-gray);
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 34px;
+            width: 56px;
+            height: 30px;
         }
 
         .switch input {
@@ -483,25 +602,27 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+            background-color: #E0E0E0;
+            transition: .3s;
+            border-radius: 30px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
+            height: 24px;
+            width: 24px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
-            transition: .4s;
+            transition: .3s;
             border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         input:checked + .slider {
-            background-color: var(--primary-pink);
+            background: linear-gradient(135deg, var(--primary-pink), var(--accent-pink));
         }
 
         input:checked + .slider:before {
@@ -510,33 +631,63 @@
 
         .schedule-input {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--light-pink);
-            border-radius: 8px;
+            padding: 0.9rem 1.1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             margin-top: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-input:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.08);
         }
 
         /* Pig Management */
         .pig-form {
             background: white;
             padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px var(--shadow);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .pig-form h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-gray);
+            font-weight: 700;
+            font-size: 1.3rem;
         }
 
         .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
         }
 
         .pig-list {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px var(--shadow);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .pig-list > div:first-child {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.08), rgba(240, 98, 146, 0.08));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pig-list h3 {
+            color: var(--dark-pink);
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
         .pig-table {
@@ -546,81 +697,169 @@
 
         .pig-table th,
         .pig-table td {
-            padding: 1rem;
+            padding: 1.2rem 1.5rem;
             text-align: left;
-            border-bottom: 1px solid var(--light-pink);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
         }
 
         .pig-table th {
-            background: var(--light-pink);
-            font-weight: 600;
-            color: var(--dark-pink);
+            background: var(--light-gray);
+            font-weight: 700;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
         }
 
         .pig-table tr:hover {
-            background: rgba(233, 30, 99, 0.05);
+            background: rgba(233, 30, 99, 0.02);
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.35rem 0.9rem;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
-        .status-healthy {
-            background: rgba(76, 175, 80, 0.1);
+        .status-active {
+            background: rgba(76, 175, 80, 0.12);
             color: var(--success-green);
         }
 
         .status-sold {
-            background: rgba(244, 67, 54, 0.1);
+            background: rgba(244, 67, 54, 0.12);
             color: var(--error-red);
         }
 
         .btn-sell {
-            background: var(--warning-orange);
+            background: linear-gradient(135deg, var(--warning-orange), #FB8C00);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.1rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-right: 0.6rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+            margin-bottom: 0.5rem;
         }
 
         .btn-sell:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 0.6rem 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.6rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-history {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
+            padding: 0.6rem 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.6rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-history:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(156, 39, 176, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--error-red), #E53935);
+            color: white;
+            padding: 0.6rem 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.3);
         }
 
         /* Charts */
         .chart-container {
             background: white;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px var(--shadow);
+            padding: 1.8rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-header h3 {
+            color: var(--dark-gray);
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
         .chart-filters {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .filter-select {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--light-pink);
-            border-radius: 8px;
+            padding: 0.7rem 1.1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
             background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.08);
         }
 
         /* Modal */
@@ -632,8 +871,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
         }
 
         .modal.show {
@@ -644,64 +883,82 @@
 
         .modal-content {
             background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             width: 90%;
-            max-width: 500px;
+            max-width: 520px;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid var(--border-color);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 2px solid var(--light-gray);
         }
 
         .modal-title {
             font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark-pink);
+            font-weight: 700;
+            color: var(--dark-gray);
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: var(--neutral-gray);
             cursor: pointer;
+            transition: all 0.2s;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
         }
 
         .close-btn:hover {
             color: var(--dark-gray);
+            background: var(--light-gray);
         }
 
         /* Alerts */
         .alert {
-            padding: 1rem;
+            padding: 1.2rem 1.5rem;
             margin: 1rem 0;
-            border-radius: 8px;
+            border-radius: 14px;
             border-left: 4px solid;
+            font-size: 0.9rem;
         }
 
         .alert-success {
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(76, 175, 80, 0.08);
             border-left-color: var(--success-green);
             color: var(--success-green);
         }
 
         .alert-error {
-            background: rgba(244, 67, 54, 0.1);
+            background: rgba(244, 67, 54, 0.08);
             border-left-color: var(--error-red);
             color: var(--error-red);
         }
 
         .alert-warning {
-            background: rgba(255, 152, 0, 0.1);
+            background: rgba(255, 152, 0, 0.08);
             border-left-color: var(--warning-orange);
             color: var(--warning-orange);
+        }
+
+        .alert-info {
+            background: rgba(233, 30, 99, 0.08);
+            border-left-color: var(--primary-pink);
+            color: var(--primary-pink);
         }
 
         /* Loading */
@@ -709,12 +966,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 3rem;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border: 4px solid var(--light-pink);
             border-top: 4px solid var(--primary-pink);
             border-radius: 50%;
@@ -726,37 +983,69 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Notifications */
+        /* Notifications Toast */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 24px;
+            right: 24px;
             background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px var(--shadow);
+            padding: 1.2rem 1.8rem;
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
             border-left: 4px solid var(--primary-pink);
             z-index: 3000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
+            transform: translateX(450px);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            min-width: 300px;
+            border: 1px solid var(--border-color);
         }
 
         .notification.show {
             transform: translateX(0);
         }
 
-        /* Responsive Design */
+        /* Chart responsiveness */
+        .chart-canvas {
+            max-width: 100%;
+            height: 320px !important;
+        }
+
+        /* Utility classes */
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .gap-1 { gap: 1rem; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+
+        /* Mobile-specific improvements */
         @media (max-width: 768px) {
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            .main-content {
+                width: 100%;
+                overflow-x: hidden;
+                margin-left: 0 !important;
+                padding: 1.5rem;
+            }
+
+            .page-content {
+                width: 100%;
+                overflow-x: hidden;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
+                width: 260px;
             }
 
             .sidebar.show {
                 transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
             }
 
             .mobile-menu-btn {
@@ -776,40 +1065,185 @@
             }
 
             .auth-card {
-                margin: 1rem;
+                margin: 1.5rem;
                 padding: 2rem;
+            }
+
+            .pig-form, .pig-list {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .pig-table {
+                width: 100%;
+                min-width: 650px;
+                display: block;
+            }
+
+            .pig-table td {
+                white-space: nowrap;
+            }
+
+            .btn-edit, .btn-history, .btn-sell, .btn-delete {
+                display: inline-block;
+                margin: 0.25rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .chart-container {
+                width: 100%;
+                overflow-x: auto;
+                padding: 1.2rem;
+            }
+
+            canvas, .chart-canvas {
+                width: 100% !important;
+                height: 280px !important;
+            }
+
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .chart-filters {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .filter-select {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .top-bar {
+                padding: 1rem 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .notification {
+                right: 1rem;
+                left: 1rem;
+                min-width: auto;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                padding: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
+            }
+
+            .camera-view {
+                height: 250px;
+            }
+
+            .control-card {
+                padding: 1.5rem;
+            }
+
+            /* Mobile table improvements */
+            .pig-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Better touch targets for mobile */
+            button, .btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Improve form inputs on mobile */
+            .form-input, .schedule-input {
+                font-size: 16px; /* Prevents zoom on iOS */
             }
         }
 
-        /* Hide scrollbar */
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: none !important;
+            }
+
+            .main-content {
+                margin-left: 280px !important;
+            }
+        }
+
+        /* Scrollbar Styling */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
             background: var(--light-gray);
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-pink);
-            border-radius: 3px;
+            background: linear-gradient(180deg, var(--secondary-pink), var(--primary-pink));
+            border-radius: 10px;
         }
 
-        /* Chart responsiveness */
-        .chart-canvas {
-            max-width: 100%;
-            height: 300px !important;
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--primary-pink), var(--dark-pink));
         }
 
-        /* Additional utility classes */
-        .text-center { text-align: center; }
-        .mt-2 { margin-top: 1rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .hidden { display: none !important; }
-        .flex { display: flex; }
-        .gap-1 { gap: 1rem; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
+        /* Additional Modern Touches */
+        select.form-input {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23E91E63' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+
+        .camera-section .chart-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .camera-placeholder > div:last-child {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-top: 0.8rem;
+        }
+
+        img#camImg {
+            object-fit: cover;
+        }
+
+        #thermalContainer canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .report-section {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .report-table {
+            width: 100%;
+            min-width: 700px;
+        }
     </style>
 </head>
 <body>
@@ -821,17 +1255,17 @@
                 <div class="auth-logo">
                     <i class="fas fa-piggy-bank"></i>
                 </div>
-                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">SwineCare</h1>
-                <p style="color: var(--neutral-gray);">IoT Swine Monitoring System</p>
+                <h1>SwineCare</h1>
+                <p>IoT Swine Monitoring System</p>
             </div>
             <form id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" class="form-input" required>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" class="form-input" required>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
                 </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="rememberMe">
@@ -851,25 +1285,25 @@
                 <div class="auth-logo">
                     <i class="fas fa-piggy-bank"></i>
                 </div>
-                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">Create Account</h1>
-                <p style="color: var(--neutral-gray);">Join SwineCare Today</p>
+                <h1>Create Account</h1>
+                <p>Join SwineCare Today</p>
             </div>
             <form id="registerForm">
                 <div class="form-group">
                     <label for="registerName">Full Name</label>
-                    <input type="text" id="registerName" class="form-input" required>
+                    <input type="text" id="registerName" class="form-input" placeholder="Enter your full name" required>
                 </div>
                 <div class="form-group">
                     <label for="registerEmail">Email Address</label>
-                    <input type="email" id="registerEmail" class="form-input" required>
+                    <input type="email" id="registerEmail" class="form-input" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" class="form-input" required>
+                    <input type="password" id="registerPassword" class="form-input" placeholder="Create a password" required>
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-input" required>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Create Account</button>
                 <div class="auth-links">
@@ -884,13 +1318,13 @@
                 <div class="auth-logo">
                     <i class="fas fa-piggy-bank"></i>
                 </div>
-                <h1 style="color: var(--dark-pink); margin-bottom: 0.5rem;">Reset Password</h1>
-                <p style="color: var(--neutral-gray);">Enter your email to reset password</p>
+                <h1>Reset Password</h1>
+                <p>Enter your email to reset password</p>
             </div>
             <form id="forgotPasswordForm">
                 <div class="form-group">
                     <label for="resetEmail">Email Address</label>
-                    <input type="email" id="resetEmail" class="form-input" required>
+                    <input type="email" id="resetEmail" class="form-input" placeholder="Enter your email" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Send Reset Link</button>
                 <div class="auth-links">
@@ -949,12 +1383,12 @@
                 <button class="mobile-menu-btn" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h2 id="pageTitle">Dashboard</h2>
+                <h2 id="pageTitle" style="font-weight: 700; color: var(--dark-gray);">Dashboard</h2>
                 <div class="user-profile">
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span id="userName">Farmer</span>
                     <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </div>
@@ -980,7 +1414,7 @@
                     
                     <div class="stat-card">
                         <div class="stat-header">
-                            <span class="stat-title">Temperature</span>
+                            <span class="stat-title">Ambient Temperature</span>
                             <div class="stat-icon">
                                 <i class="fas fa-thermometer-half"></i>
                             </div>
@@ -1008,36 +1442,46 @@
                         <div class="stat-value" id="pigBodyTemp">--<span class="stat-unit">°C</span></div>
                     </div>
                 </div>
-
+				
                 <!-- Camera Section -->
-                <div class="camera-section">
-                    <div class="chart-header">
-                        <h3>Live Camera Monitoring</h3>
-                        <div class="camera-controls">
-                            <button class="btn btn-secondary" onclick="switchCamera('behavior')">
-                                <i class="fas fa-eye"></i> Behavior Cam
-                            </button>
-                            <button class="btn btn-secondary" onclick="switchCamera('thermal')">
-                                <i class="fas fa-thermometer-half"></i> Thermal Cam
-                            </button>
-                        </div>
-                    </div>
-                    <div class="camera-view">
-                        <div class="camera-placeholder" id="cameraFeed">
-                            <div style="text-align: center;">
-                                <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                <div>Live Camera Feed - Behavior Monitoring</div>
-                                <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">ESP32 Camera Feed Active</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<div class="camera-section">
+				  <div class="chart-header">
+					<h3>Live Camera Monitoring</h3>
+					<div class="camera-controls">
+					  <button class="btn btn-secondary" onclick="switchCamera('behavior')">
+						<i class="fas fa-eye"></i> Behavior Cam
+					  </button>
+					  <button class="btn btn-secondary" onclick="switchCamera('thermal')">
+						<i class="fas fa-thermometer-half"></i> Thermal Cam
+					  </button>
+					</div>
+				  </div>
 
+				  <div class="camera-view">
+					<div class="camera-placeholder" id="cameraFeed">
+					  <img id="camImg" src=""
+						   alt="Camera Feed"
+						   style="max-width: 100%; height: 100%; border-radius: 16px; display: none;" />
+
+					  <div id="thermalContainer" style="display: none; text-align: center;">
+						<canvas id="canvas" width="320" height="240"
+								style="border-radius: 16px; background: black; max-width: 100%;"></canvas>
+					  </div>
+
+					  <div id="camPlaceholder" style="text-align: center; color: white;">
+						<i class="fas fa-video"></i>
+						<div>Live Camera Feed - Behavior Monitoring</div>
+						<div>Waiting for ESP32 Camera...</div>
+					  </div>
+					</div>
+				  </div>
+				</div>				
+				
                 <!-- Controls Section -->
                 <div class="controls-section">
                     <div class="control-card">
                         <div class="control-header">
-                            <span class="control-title">Automatic Feeder</span>
+                            <span class="control-title"><i class="fas fa-utensils" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Automatic Feeder</span>
                             <label class="switch">
                                 <input type="checkbox" id="feederSwitch" onchange="toggleFeeder()">
                                 <span class="slider"></span>
@@ -1055,7 +1499,7 @@
 
                     <div class="control-card">
                         <div class="control-header">
-                            <span class="control-title">Water Shower</span>
+                            <span class="control-title"><i class="fas fa-shower" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Water Shower</span>
                             <label class="switch">
                                 <input type="checkbox" id="showerSwitch" onchange="toggleShower()">
                                 <span class="slider"></span>
@@ -1082,12 +1526,12 @@
 
                 <!-- Pig Registration Form -->
                 <div class="pig-form">
-                    <h3 style="margin-bottom: 1rem; color: var(--dark-pink);">Register New Pig</h3>
+                    <h3><i class="fas fa-plus-circle" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Register New Pig</h3>
                     <form id="pigForm">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="pigTag">Tag Number</label>
-                                <input type="text" id="pigTag" class="form-input" required>
+                                <input type="text" id="pigTag" class="form-input" placeholder="e.g., PIG-001" required>
                             </div>
                             <div class="form-group">
                                 <label for="pigBreed">Breed</label>
@@ -1104,11 +1548,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="pigAge">Age (months)</label>
-                                <input type="number" id="pigAge" class="form-input" min="1" required>
+                                <input type="number" id="pigAge" class="form-input" min="1" placeholder="Enter age" required>
                             </div>
                             <div class="form-group">
                                 <label for="pigWeight">Weight (kg)</label>
-                                <input type="number" id="pigWeight" class="form-input" step="0.1" min="1" required>
+                                <input type="number" id="pigWeight" class="form-input" step="0.1" min="1" placeholder="Enter weight" required>
                             </div>
                         </div>
                         <div class="form-row">
@@ -1122,34 +1566,36 @@
                             </div>
                             <div class="form-group">
                                 <label for="pigLength">Length (cm)</label>
-                                <input type="number" id="pigLength" class="form-input" min="10" required>
+                                <input type="number" id="pigLength" class="form-input" min="10" placeholder="Enter length" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Register Pig</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Register Pig</button>
                     </form>
                 </div>
 
                 <!-- Pig List -->
                 <div class="pig-list">
-                    <div style="padding: 1rem; background: var(--light-pink);">
-                        <h3 style="color: var(--dark-pink);">Registered Pigs</h3>
+                    <div>
+                        <h3><i class="fas fa-list" style="margin-right: 0.5rem;"></i> Registered Pigs</h3>
                     </div>
-                    <table class="pig-table">
-                        <thead>
-                            <tr>
-                                <th>Tag #</th>
-                                <th>Breed</th>
-                                <th>Age (months)</th>
-                                <th>Weight (kg)</th>
-                                <th>Gender</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pigTableBody">
-                            <!-- Pig rows will be populated here -->
-                        </tbody>
-                    </table>
+                    <div class="pig-table-wrapper">
+                        <table class="pig-table">
+                            <thead>
+                                <tr>
+                                    <th>Tag #</th>
+                                    <th>Breed</th>
+                                    <th>Age (months)</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Gender</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pigTableBody">
+                                <!-- Pig rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -1163,7 +1609,7 @@
                 <!-- Chart Filters -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Data Filters</h3>
+                        <h3><i class="fas fa-filter" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Data Filters</h3>
                         <div class="chart-filters">
                             <select id="dataFilter" class="filter-select">
                                 <option value="24h">Last 24 Hours</option>
@@ -1181,7 +1627,7 @@
                 <!-- Temperature Chart -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Temperature Monitoring</h3>
+                        <h3><i class="fas fa-temperature-high" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Temperature Monitoring</h3>
                     </div>
                     <canvas id="temperatureChart" class="chart-canvas"></canvas>
                 </div>
@@ -1189,7 +1635,7 @@
                 <!-- Humidity Chart -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Humidity Monitoring</h3>
+                        <h3><i class="fas fa-tint" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Humidity Monitoring</h3>
                     </div>
                     <canvas id="humidityChart" class="chart-canvas"></canvas>
                 </div>
@@ -1197,7 +1643,7 @@
                 <!-- Pig Body Temperature Chart -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Pig Body Temperature</h3>
+                        <h3><i class="fas fa-heartbeat" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Pig Body Temperature</h3>
                     </div>
                     <canvas id="pigTempChart" class="chart-canvas"></canvas>
                 </div>
@@ -1225,7 +1671,7 @@
                 <!-- Report Filters -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Report Generation</h3>
+                        <h3><i class="fas fa-file-alt" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Report Generation</h3>
                         <div class="chart-filters">
                             <input type="date" id="reportStartDate" class="filter-select">
                             <input type="date" id="reportEndDate" class="filter-select">
@@ -1239,10 +1685,11 @@
                 <!-- Report Preview -->
                 <div id="reportPreview" class="chart-container">
                     <div class="chart-header">
-                        <h3 style="color: var(--dark-pink);">Report Preview</h3>
+                        <h3><i class="fas fa-eye" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Report Preview</h3>
                     </div>
                     <div id="reportContent">
-                        <p style="text-align: center; color: var(--neutral-gray); padding: 2rem;">
+                        <p style="text-align: center; color: var(--neutral-gray); padding: 3rem;">
+                            <i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
                             Select date range and click "Generate PDF Report" to preview
                         </p>
                     </div>
@@ -1255,31 +1702,92 @@
     <div id="sellPigModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Sell Pig</h3>
+                <h3 class="modal-title"><i class="fas fa-dollar-sign" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Sell Pig</h3>
                 <button class="close-btn" onclick="closeSellModal()">&times;</button>
             </div>
             <form id="sellPigForm">
                 <div class="form-group">
                     <label for="sellAmount">Sale Amount (₱)</label>
-                    <input type="number" id="sellAmount" class="form-input" step="0.01" min="0" required>
+                    <input type="number" id="sellAmount" class="form-input" step="0.01" min="0" placeholder="Enter sale amount" required>
                 </div>
                 <div class="form-group">
                     <label for="buyerName">Buyer Name (Optional)</label>
-                    <input type="text" id="buyerName" class="form-input">
+                    <input type="text" id="buyerName" class="form-input" placeholder="Enter buyer name">
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeSellModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Confirm Sale</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeSellModal()" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Confirm Sale</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Delete Pig Confirmation Modal -->
+    <div id="deletePigModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem; color: var(--error-red);"></i> Delete Pig</h3>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <p style="font-size: 1rem; line-height: 1.6;">Are you sure you want to delete this pig from the system?</p>
+                <p style="color: var(--error-red); margin-top: 1rem; font-weight: 600; background: rgba(244, 67, 54, 0.08); padding: 0.75rem; border-radius: 8px;">
+                    <i class="fas fa-info-circle"></i> This action cannot be undone.
+                </p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()" style="flex: 1;">Cancel</button>
+                <button type="button" class="btn-delete" onclick="confirmDelete()" style="flex: 1;"><i class="fas fa-trash"></i> Delete Pig</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Pig Modal -->
+    <div id="editPigModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Edit Pig Information</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editPigForm">
+                <div class="form-group">
+                    <label for="editPigAge">Age (months)</label>
+                    <input type="number" id="editPigAge" class="form-input" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPigWeight">Weight (kg)</label>
+                    <input type="number" id="editPigWeight" class="form-input" step="0.1" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPigLength">Length (cm)</label>
+                    <input type="number" id="editPigLength" class="form-input" min="10" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-check"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-history" style="margin-right: 0.5rem; color: var(--primary-pink);"></i> Edit History</h3>
+                <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
+            </div>
+            <div id="historyContent" style="max-height: 400px; overflow-y: auto;">
+                <p style="text-align: center; color: var(--neutral-gray); padding: 2rem;">Loading history...</p>
+            </div>
         </div>
     </div>
 
     <!-- Notification Toast -->
     <div id="notificationToast" class="notification">
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <i class="fas fa-exclamation-triangle" style="color: var(--warning-orange);"></i>
-            <span id="notificationMessage"></span>
+            <i class="fas fa-check-circle" style="color: var(--primary-pink); font-size: 1.3rem;"></i>
+            <span id="notificationMessage" style="font-weight: 500;"></span>
         </div>
     </div>
 
@@ -1301,16 +1809,27 @@
         const database = firebase.database();
         const firestore = firebase.firestore();
 
+        // Enable Firebase persistence
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .catch((error) => {
+                console.error("Error setting persistence:", error);
+            });
+
         // Global Variables
         let currentUser = null;
         let currentPigToSell = null;
+        let currentPigToDelete = null;
+        let currentPigToEdit = null;
+        let currentPigForHistory = null;
         let charts = {};
         let chartInstances = {};
         let simulationInterval;
+		let pig_temp = null;
+		let ambient_temp = null;
+		let ambient_humidity = null;
 
         // Authentication Functions
         function showLogin() {
-            // Destroy charts when switching to login
             destroyAllCharts();
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('registerPage').style.display = 'none';
@@ -1318,7 +1837,6 @@
         }
 
         function showRegister() {
-            // Destroy charts when switching to register
             destroyAllCharts();
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'block';
@@ -1388,7 +1906,6 @@
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 await userCredential.user.updateProfile({ displayName: name });
                 
-                // Create user profile in Firestore
                 await firestore.collection('users').doc(userCredential.user.uid).set({
                     name: name,
                     email: email,
@@ -1423,23 +1940,19 @@
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('appContainer').style.display = 'flex';
             
-            // Update user info
             const displayName = currentUser.displayName || 'Farmer';
             document.getElementById('userName').textContent = displayName;
             document.getElementById('userAvatar').textContent = displayName.charAt(0).toUpperCase();
             
-            // Load initial data
             loadPigs();
             setupRealtimeListeners();
             
-            // Small delay to ensure DOM is ready before initializing charts
             setTimeout(() => {
                 initializeCharts();
             }, 100);
         }
 
         function logout() {
-            // Destroy all charts before logging out
             destroyAllCharts();
             
             auth.signOut();
@@ -1452,19 +1965,15 @@
 
         // Navigation
         function showPage(pageId) {
-            // Hide all pages
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(page => page.classList.remove('active'));
             
-            // Show selected page
             document.getElementById(pageId + 'Page').classList.add('active');
             
-            // Update navigation
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Update page title
             const titles = {
                 'dashboard': 'Dashboard',
                 'pigs': 'Pig Management',
@@ -1479,19 +1988,21 @@
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
             sidebar.classList.toggle('mobile-hidden');
+            sidebar.classList.toggle('show');
             mainContent.classList.toggle('full-width');
         }
 
         // IoT Data Simulation
         function startDataSimulation() {
-            // Simulate real-time data updates every 5 seconds
             simulationInterval = setInterval(() => {
-                updateSensorData();
+                if (ambient_temp) {
+                    ambient_temp = parseFloat(ambient_temp).toFixed(2);
+                }
+				updateSensorData(pig_temp, ambient_humidity, ambient_temp);
                 checkHealthAlerts();
             }, 5000);
             
-            // Initial data load
-            updateSensorData();
+			updateSensorData(pig_temp, ambient_humidity, ambient_temp);
         }
 
         function stopDataSimulation() {
@@ -1500,20 +2011,17 @@
             }
         }
 
-        function updateSensorData() {
+        function updateSensorData(pig_temp = 0, H = 0, ambient_temp = 0) {
             if (!currentUser) return;
 
-            // Simulate sensor data
-            const temperature = (25 + Math.random() * 10).toFixed(1);
-            const humidity = (60 + Math.random() * 20).toFixed(1);
-            const pigBodyTemp = (38 + Math.random() * 3).toFixed(1);
-
-            // Update UI
+            const temperature = ambient_temp;
+            const humidity = H;
+            const pigBodyTemp = pig_temp;
+			
             document.getElementById('temperature').innerHTML = `${temperature}<span class="stat-unit">°C</span>`;
             document.getElementById('humidity').innerHTML = `${humidity}<span class="stat-unit">%</span>`;
             document.getElementById('pigBodyTemp').innerHTML = `${pigBodyTemp}<span class="stat-unit">°C</span>`;
 
-            // Save to Firebase
             const timestamp = Date.now();
             const sensorData = {
                 temperature: parseFloat(temperature),
@@ -1534,86 +2042,359 @@
             if (temperature > 35) {
                 addNotification('High Temperature Alert', `Temperature is ${temperature}°C - Above normal range`, 'warning');
             }
+			
             if (humidity > 85) {
                 addNotification('High Humidity Alert', `Humidity is ${humidity}% - Risk of disease`, 'warning');
             }
-            if (pigBodyTemp > 40) {
+			
+			if (pigBodyTemp > 40) {
                 addNotification('Pig Health Alert', `Pig body temperature is ${pigBodyTemp}°C - Possible fever`, 'error');
             }
         }
 
-        // Camera Functions
-        function switchCamera(type) {
-            const cameraFeed = document.getElementById('cameraFeed');
-            if (type === 'behavior') {
-                cameraFeed.innerHTML = `
-                    <div style="text-align: center; color: white;">
-                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <div>Live Camera Feed - Behavior Monitoring</div>
-                        <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">ESP32 Camera Feed Active</div>
-                    </div>
-                `;
-            } else if (type === 'thermal') {
-                cameraFeed.innerHTML = `
-                    <div style="text-align: center; color: white;">
-                        <i class="fas fa-thermometer-half" style="font-size: 3rem; margin-bottom: 1rem; color: #FF6B6B;"></i>
-                        <div>Infrared Thermal Camera</div>
-                        <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">Body Temperature Monitoring Active</div>
-                    </div>
-                `;
-            }
-        }
+		// Camera Functions
+		const CAMERA_URLS = {
+		  behavior: "http://cam_stream.local:81/stream"
+		};
 
-        // Control Functions
-        function toggleFeeder() {
-            const isEnabled = document.getElementById('feederSwitch').checked;
-            showNotification(`Automatic Feeder ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
-            
-            if (currentUser) {
-                database.ref(`controls/${currentUser.uid}/feeder`).set({
-                    enabled: isEnabled,
-                    lastUpdated: Date.now()
-                });
-            }
-        }
+		const THERMAL_WS_URL = "ws://heatmap/thermal";
+		const CONTROL_WS_URL = "ws://heatmap/control";
+		let controlConnecting = false;
 
-        function toggleShower() {
-            const isEnabled = document.getElementById('showerSwitch').checked;
-            showNotification(`Water Shower ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
-            
-            if (currentUser) {
-                database.ref(`controls/${currentUser.uid}/shower`).set({
-                    enabled: isEnabled,
-                    lastUpdated: Date.now()
-                });
-            }
-        }
+		const camImg = document.getElementById('camImg');
+		const thermalContainer = document.getElementById('thermalContainer');
+		const camPlaceholder = document.getElementById('camPlaceholder');
+		
+		const canvas = document.getElementById('canvas');
+		const ctx = canvas.getContext('2d');
 
-        function manualFeed() {
-            showNotification('Manual feeding activated', 'success');
-            addNotification('Manual Feed', 'Manual feeding session started', 'info');
-            
-            if (currentUser) {
-                database.ref(`feedLogs/${currentUser.uid}/${Date.now()}`).set({
-                    type: 'manual',
-                    timestamp: Date.now(),
-                    amount: '2.5kg' // Simulated
-                });
-            }
-        }
+		const cols = 32, rows = 24;
+		const smallCanvas = document.createElement('canvas');
+		smallCanvas.width = cols;
+		smallCanvas.height = rows;
+		const smallCtx = smallCanvas.getContext('2d');
 
-        function manualShower() {
-            showNotification('Water shower activated', 'success');
-            addNotification('Manual Shower', 'Water shower session started', 'info');
-            
-            if (currentUser) {
-                database.ref(`showerLogs/${currentUser.uid}/${Date.now()}`).set({
-                    type: 'manual',
-                    timestamp: Date.now(),
-                    duration: '10 minutes' // Simulated
-                });
-            }
-        }
+		let thermalWs = null;
+		let controlWs = null;
+
+		let controlConnected = false;
+		let controlQueue = [];
+		let controlReconnectDelay = 1000;
+		const CONTROL_MAX_RECONNECT_DELAY = 30000;
+
+		let processing = false;
+
+		function connectControlWS(url = CONTROL_WS_URL) {
+		  if (controlWs && (controlWs.readyState === WebSocket.OPEN || controlWs.readyState === WebSocket.CONNECTING)) {
+			return;
+		  }
+		  controlConnecting = true;
+
+		  try {
+			controlWs = new WebSocket(url);
+			controlWs.onopen = () => {
+			  console.log('[ControlWS] connected');
+			  controlConnected = true;
+			  controlConnecting = false;
+			  controlReconnectDelay = 1000;
+			  while (controlQueue.length) {
+				const m = controlQueue.shift();
+				_sendControlNow(m);
+			  }
+			};
+
+			controlWs.onmessage = (evt) => { console.log('[ControlWS] recv:', evt.data); };
+
+			controlWs.onclose = (evt) => {
+			  console.warn('[ControlWS] closed', 'code=', evt.code, 'reason=', evt.reason);
+			  controlConnected = false;
+			  controlWs = null;
+			  controlConnecting = false;
+			  setTimeout(() => {
+				controlReconnectDelay = Math.min(CONTROL_MAX_RECONNECT_DELAY, Math.floor(controlReconnectDelay * 1.5));
+				connectControlWS(url);
+			  }, controlReconnectDelay);
+			};
+
+			controlWs.onerror = (err) => {
+			  console.error('[ControlWS] error', err);
+			};
+
+		  } catch (err) {
+			console.error('[ControlWS] connect exception', err);
+			controlConnected = false;
+			controlConnecting = false;
+		  }
+		}
+
+		function _sendControlNow(out) {
+		  if (!controlWs || controlWs.readyState !== WebSocket.OPEN) {
+			controlQueue.push(out);
+			return;
+		  }
+		  try {
+			controlWs.send(out);
+			console.log('[ControlWS] sent', out);
+		  } catch (e) {
+			console.error('[ControlWS] send failed, queueing', e);
+			controlQueue.push(out);
+		  }
+		}
+
+		function sendControl(payload) {
+		  const out = (typeof payload === 'object') ? JSON.stringify(payload) : String(payload);
+
+		  if (controlWs && controlWs.readyState === WebSocket.OPEN && controlConnected) {
+			_sendControlNow(out);
+			return;
+		  }
+
+		  controlQueue.push(out);
+		  console.warn('[ControlWS] not connected — queued command:', out);
+
+		  if (!controlWs || controlWs.readyState === WebSocket.CLOSED) {
+			if (!controlConnecting) connectControlWS();
+		  }
+		}
+
+		connectControlWS();
+
+		function switchCamera(type) {
+		  if (type === 'behavior') {
+			stopThermalFeed();
+			camImg.src = CAMERA_URLS.behavior;
+			camImg.style.display = "block";
+			thermalContainer.style.display = "none";
+			camPlaceholder.style.display = "none";
+		  } else if (type === 'thermal') {
+			camImg.style.display = "none";
+			camPlaceholder.style.display = "none";
+			thermalContainer.style.display = "block";
+			startThermalFeed();
+		  }
+		}
+
+		function startThermalFeed() {
+		  if (thermalWs && thermalWs.readyState === WebSocket.OPEN) return;
+		  thermalWs = new WebSocket(THERMAL_WS_URL);
+		  thermalWs.binaryType = "arraybuffer";
+
+		  thermalWs.onopen = () => console.log("[ThermalWS] Thermal connected");
+		  thermalWs.onclose = () => {
+			console.warn("[ThermalWS] Disconnected, retrying...");
+			setTimeout(startThermalFeed, 2000);
+		  };
+
+		  thermalWs.onmessage = async (e) => {
+			if (e.data instanceof ArrayBuffer) {
+			  const floats = new Float32Array(e.data);
+			  if (floats.length === cols * rows) {
+				drawFloatFrame(floats);
+			  }
+			  return;
+			}
+
+			try {
+			  let text;
+			  if (typeof e.data === "string") {
+				text = e.data;
+			  } else if (e.data instanceof Blob) {
+				text = await e.data.text();
+			  } else {
+				return;
+			  }
+
+			  const obj = JSON.parse(text);
+
+			  if (obj && obj.type === "ta" && obj.ta !== undefined) {
+				const taVal = Number(obj.ta);
+				if (Number.isFinite(taVal)) {
+				  ambient_temp = taVal;
+				}
+			  } else if (obj && obj.type === "dht" && obj.humidity !== undefined) {
+				const humVal = Number(obj.humidity);
+				if (Number.isFinite(humVal)) {
+				  ambient_humidity = humVal;
+				}
+			  } else if (obj && obj.type === "meta") {
+				if (obj.ta !== undefined) {
+				  const taVal = Number(obj.ta);
+				  if (Number.isFinite(taVal)) ambient_temp = taVal;
+				}
+				if (obj.humidity !== undefined) {
+				  const humVal = Number(obj.humidity);
+				  if (Number.isFinite(humVal)) ambient_humidity = humVal;
+				}
+			  }
+			} catch (err) {
+			  console.warn("[ThermalWS] Failed to parse text message:", err);
+			}
+		  };
+		}
+
+		function stopThermalFeed() {
+		  if (thermalWs) {
+			try { thermalWs.close(); } catch (e) {}
+			thermalWs = null;
+		  }
+		}
+
+		function lerp(a, b, t) { return a + (b - a) * t; }
+
+		function getColorForValue(val, vminLocal, vmaxLocal, cmap = 'turbo') {
+		  if (!isFinite(val)) return [0, 0, 0, 255];
+		  if (vminLocal === vmaxLocal) { vminLocal -= 0.5; vmaxLocal += 0.5; }
+		  const t = Math.max(0, Math.min(1, (val - vminLocal) / (vmaxLocal - vminLocal)));
+		  const stops = [
+			[0.0, [48, 18, 59]],
+			[0.25, [18, 102, 173]],
+			[0.5, [28, 179, 128]],
+			[0.75, [248, 182, 35]],
+			[1.0, [181, 0, 0]]
+		  ];
+		  for (let i = 0; i < stops.length - 1; i++) {
+			const t0 = stops[i][0], t1 = stops[i + 1][0];
+			if (t >= t0 && t <= t1) {
+			  const local = (t - t0) / (t1 - t0);
+			  const c0 = stops[i][1], c1 = stops[i + 1][1];
+			  return [
+				Math.round(lerp(c0[0], c1[0], local)),
+				Math.round(lerp(c0[1], c1[1], local)),
+				Math.round(lerp(c0[2], c1[2], local)),
+				255
+			  ];
+			}
+		  }
+		  return [255, 0, 255, 255];
+		}
+
+		function drawFloatFrame(floats) {
+		  if (processing) return;
+		  processing = true;
+
+		  let obsMin = Infinity, obsMax = -Infinity;
+		  for (const v of floats) {
+			if (isFinite(v)) {
+			  if (v < obsMin) obsMin = v;
+			  if (v > obsMax) obsMax = v;
+			}
+		  }
+
+		  pig_temp = isFinite(obsMax) ? obsMax.toFixed(2) : '-';
+
+		  const vmin = isFinite(obsMin) ? obsMin : 0;
+		  const vmax = isFinite(obsMax) ? obsMax : vmin + 1;
+
+		  const img = smallCtx.createImageData(cols, rows);
+		  for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < cols; c++) {
+			  const idx = r * cols + c;
+			  const v = floats[idx];
+			  const col = getColorForValue(v, vmin, vmax, 'turbo');
+			  const p = idx * 4;
+			  img.data[p + 0] = col[0];
+			  img.data[p + 1] = col[1];
+			  img.data[p + 2] = col[2];
+			  img.data[p + 3] = 255;
+			}
+		  }
+		  smallCtx.putImageData(img, 0, 0);
+
+		  ctx.clearRect(0, 0, canvas.width, canvas.height);
+		  ctx.save();
+		  ctx.imageSmoothingEnabled = false;
+		  ctx.translate(canvas.width, 0);
+		  ctx.scale(-1, 1);
+		  ctx.drawImage(smallCanvas, 0, 0, canvas.width, canvas.height);
+		  ctx.restore();
+
+		  processing = false;
+		}
+
+		document.addEventListener("DOMContentLoaded", () => {
+		  switchCamera('behavior');
+		});
+
+		function toggleFeeder() {
+		  const isEnabled = document.getElementById('feederSwitch').checked;
+		  showNotification(`Automatic Feeder ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+
+		  if (currentUser) {
+			database.ref(`controls/${currentUser.uid}/feeder`).set({
+			  enabled: isEnabled,
+			  lastUpdated: Date.now()
+			});
+		  }
+
+		  sendControl({
+			cmd: 'feeder',
+			state: isEnabled ? 'on' : 'off',
+			uid: currentUser ? currentUser.uid : undefined,
+			ts: Date.now()
+		  });
+		}
+
+		function toggleShower() {
+		  const isEnabled = document.getElementById('showerSwitch').checked;
+		  showNotification(`Water Shower ${isEnabled ? 'Enabled' : 'Disabled'}`, 'success');
+
+		  if (currentUser) {
+			database.ref(`controls/${currentUser.uid}/shower`).set({
+			  enabled: isEnabled,
+			  lastUpdated: Date.now()
+			});
+		  }
+
+		  sendControl({
+			cmd: 'valve',
+			state: isEnabled ? 'on' : 'off',
+			target: 'shower',
+			uid: currentUser ? currentUser.uid : undefined,
+			ts: Date.now()
+		  });
+		}
+
+		function manualFeed() {
+		  showNotification('Manual feeding activated', 'success');
+		  addNotification('Manual Feed', 'Manual feeding session started', 'info');
+
+		  const simulatedAmount = 0.2;
+		  if (currentUser) {
+			database.ref(`feedLogs/${currentUser.uid}/${Date.now()}`).set({
+			  type: 'manual',
+			  timestamp: Date.now(),
+			  amount: `${simulatedAmount}kg`
+			});
+		  }
+
+		  sendControl({
+			cmd: 'feed',
+			amount: simulatedAmount,
+			uid: currentUser ? currentUser.uid : undefined,
+			ts: Date.now()
+		  });
+		}
+
+		function manualShower() {
+		  showNotification('Water shower activated', 'success');
+		  addNotification('Manual Shower', 'Water shower session started', 'info');
+
+		  const simulatedDurationMinutes = 10;
+		  if (currentUser) {
+			database.ref(`showerLogs/${currentUser.uid}/${Date.now()}`).set({
+			  type: 'manual',
+			  timestamp: Date.now(),
+			  duration: `${simulatedDurationMinutes} minutes`
+			});
+		  }
+
+		  sendControl({ cmd: 'valve', state: 'on', target: 'shower', uid: currentUser ? currentUser.uid : undefined, ts: Date.now() });
+
+		  setTimeout(() => {
+			sendControl({ cmd: 'valve', state: 'off', target: 'shower', uid: currentUser ? currentUser.uid : undefined, ts: Date.now() });
+			addNotification('Manual Shower', 'Water shower session ended', 'info');
+		  }, simulatedDurationMinutes * 60 * 1000);
+		}
 
         // Pig Management Functions
         document.getElementById('pigForm').addEventListener('submit', async (e) => {
@@ -1626,12 +2407,22 @@
                 weight: parseFloat(document.getElementById('pigWeight').value),
                 length: parseInt(document.getElementById('pigLength').value),
                 gender: document.getElementById('pigGender').value,
-                status: 'healthy',
+                status: 'active',
                 registrationDate: Date.now(),
                 userId: currentUser.uid
             };
 
             try {
+                const duplicateCheck = await firestore.collection('pigs')
+                    .where('userId', '==', currentUser.uid)
+                    .where('tagNumber', '==', pigData.tagNumber)
+                    .get();
+
+                if (!duplicateCheck.empty) {
+                    showNotification('A pig with this tag number already exists!', 'error');
+                    return;
+                }
+
                 await firestore.collection('pigs').add(pigData);
                 document.getElementById('pigForm').reset();
                 loadPigs();
@@ -1660,7 +2451,7 @@
                     
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${pig.tagNumber}</td>
+                        <td><strong>${pig.tagNumber}</strong></td>
                         <td>${pig.breed}</td>
                         <td>${pig.age}</td>
                         <td>${pig.weight}</td>
@@ -1668,8 +2459,17 @@
                         <td><span class="status-badge status-${pig.status}">${pig.status}</span></td>
                         <td>
                             ${pig.status !== 'sold' ? 
-                                `<button class="btn-sell" onclick="openSellModal('${doc.id}')">
+                                `<button class="btn-edit" onclick="openEditModal('${doc.id}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-history" onclick="openHistoryModal('${doc.id}')">
+                                    <i class="fas fa-history"></i> History
+                                </button>
+                                <button class="btn-sell" onclick="openSellModal('${doc.id}')">
                                     <i class="fas fa-dollar-sign"></i> Sell
+                                </button>
+                                <button class="btn-delete" onclick="openDeleteModal('${doc.id}')">
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>` : 
                                 '<span style="color: var(--neutral-gray);">Sold</span>'
                             }
@@ -1693,6 +2493,177 @@
             currentPigToSell = null;
             document.getElementById('sellPigModal').classList.remove('show');
             document.getElementById('sellPigForm').reset();
+        }
+
+        function openDeleteModal(pigId) {
+            currentPigToDelete = pigId;
+            document.getElementById('deletePigModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            currentPigToDelete = null;
+            document.getElementById('deletePigModal').classList.remove('show');
+        }
+
+        function openEditModal(pigId) {
+            currentPigToEdit = pigId;
+            
+            firestore.collection('pigs').doc(pigId).get().then(doc => {
+                if (doc.exists) {
+                    const pig = doc.data();
+                    document.getElementById('editPigAge').value = pig.age;
+                    document.getElementById('editPigWeight').value = pig.weight;
+                    document.getElementById('editPigLength').value = pig.length;
+                    document.getElementById('editPigModal').classList.add('show');
+                }
+            });
+        }
+
+        function closeEditModal() {
+            currentPigToEdit = null;
+            document.getElementById('editPigModal').classList.remove('show');
+            document.getElementById('editPigForm').reset();
+        }
+
+        function openHistoryModal(pigId) {
+            currentPigForHistory = pigId;
+            document.getElementById('historyModal').classList.add('show');
+            loadEditHistory(pigId);
+        }
+
+        function closeHistoryModal() {
+            currentPigForHistory = null;
+            document.getElementById('historyModal').classList.remove('show');
+        }
+
+        async function loadEditHistory(pigId) {
+            const historyContent = document.getElementById('historyContent');
+            
+            try {
+                const historySnapshot = await firestore.collection('pigEditHistory')
+                    .where('pigId', '==', pigId)
+                    .orderBy('timestamp', 'desc')
+                    .get();
+
+                if (historySnapshot.empty) {
+                    historyContent.innerHTML = '<p style="text-align: center; color: var(--neutral-gray); padding: 2rem;">No edit history available.</p>';
+                    return;
+                }
+
+                let historyHTML = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+                
+                historySnapshot.forEach(doc => {
+                    const history = doc.data();
+                    const date = new Date(history.timestamp).toLocaleString();
+                    
+                    historyHTML += `
+                        <div style="background: var(--light-gray); padding: 1.2rem; border-radius: 12px; border-left: 4px solid var(--primary-pink);">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.8rem;">
+                                <strong style="color: var(--dark-pink);">Edit on ${date}</strong>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;">
+                                ${history.changes.age ? `
+                                    <div>
+                                        <small style="color: var(--neutral-gray); display: block;">Age</small>
+                                        <div><span style="color: var(--error-red);">${history.changes.age.old}</span> → <span style="color: var(--success-green);">${history.changes.age.new}</span> months</div>
+                                    </div>
+                                ` : ''}
+                                ${history.changes.weight ? `
+                                    <div>
+                                        <small style="color: var(--neutral-gray); display: block;">Weight</small>
+                                        <div><span style="color: var(--error-red);">${history.changes.weight.old}</span> → <span style="color: var(--success-green);">${history.changes.weight.new}</span> kg</div>
+                                    </div>
+                                ` : ''}
+                                ${history.changes.length ? `
+                                    <div>
+                                        <small style="color: var(--neutral-gray); display: block;">Length</small>
+                                        <div><span style="color: var(--error-red);">${history.changes.length.old}</span> → <span style="color: var(--success-green);">${history.changes.length.new}</span> cm</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                historyHTML += '</div>';
+                historyContent.innerHTML = historyHTML;
+            } catch (error) {
+                historyContent.innerHTML = `<p style="text-align: center; color: var(--error-red); padding: 2rem;">Error loading history: ${error.message}</p>`;
+            }
+        }
+
+        document.getElementById('editPigForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentPigToEdit) return;
+
+            const newAge = parseInt(document.getElementById('editPigAge').value);
+            const newWeight = parseFloat(document.getElementById('editPigWeight').value);
+            const newLength = parseInt(document.getElementById('editPigLength').value);
+
+            try {
+                const pigDoc = await firestore.collection('pigs').doc(currentPigToEdit).get();
+                const oldData = pigDoc.data();
+
+                const changes = {};
+                if (oldData.age !== newAge) {
+                    changes.age = { old: oldData.age, new: newAge };
+                }
+                if (oldData.weight !== newWeight) {
+                    changes.weight = { old: oldData.weight, new: newWeight };
+                }
+                if (oldData.length !== newLength) {
+                    changes.length = { old: oldData.length, new: newLength };
+                }
+
+                if (Object.keys(changes).length > 0) {
+                    await firestore.collection('pigEditHistory').add({
+                        pigId: currentPigToEdit,
+                        pigTag: oldData.tagNumber,
+                        changes: changes,
+                        timestamp: Date.now(),
+                        userId: currentUser.uid
+                    });
+
+                    await firestore.collection('pigs').doc(currentPigToEdit).update({
+                        age: newAge,
+                        weight: newWeight,
+                        length: newLength,
+                        lastModified: Date.now()
+                    });
+
+                    closeEditModal();
+                    loadPigs();
+                    showNotification('Pig information updated successfully!', 'success');
+                } else {
+                    showNotification('No changes were made.', 'info');
+                }
+            } catch (error) {
+                showNotification(`Update failed: ${error.message}`, 'error');
+            }
+        });
+
+        function openDeleteModal(pigId) {
+            currentPigToDelete = pigId;
+            document.getElementById('deletePigModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            currentPigToDelete = null;
+            document.getElementById('deletePigModal').classList.remove('show');
+        }
+
+        async function confirmDelete() {
+            if (!currentPigToDelete) return;
+
+            try {
+                await firestore.collection('pigs').doc(currentPigToDelete).delete();
+                closeDeleteModal();
+                loadPigs();
+                showNotification('Pig deleted successfully', 'success');
+            } catch (error) {
+                showNotification(`Delete failed: ${error.message}`, 'error');
+            }
         }
 
         document.getElementById('sellPigForm').addEventListener('submit', async (e) => {
@@ -1721,7 +2692,6 @@
 
         // Charts and Statistics
         function initializeCharts() {
-            // Destroy existing charts before creating new ones
             destroyAllCharts();
 
             const tempCtx = document.getElementById('temperatureChart');
@@ -1729,7 +2699,7 @@
             const bodyTempCtx = document.getElementById('pigTempChart');
 
             if (!tempCtx || !humidityCtx || !bodyTempCtx) {
-                console.log('Chart canvases not found, skipping chart initialization');
+                console.log('Chart canvases not found');
                 return;
             }
 
@@ -1738,17 +2708,30 @@
                 maintainAspectRatio: false,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
                     }
                 },
                 plugins: {
                     legend: {
-                        position: 'top'
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Inter',
+                                weight: '600'
+                            }
+                        }
                     }
                 }
             };
 
-            // Temperature Chart
             chartInstances.temperature = new Chart(tempCtx, {
                 type: 'line',
                 data: {
@@ -1758,13 +2741,15 @@
                         data: [],
                         borderColor: '#E91E63',
                         backgroundColor: 'rgba(233, 30, 99, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#03A9F4'
                     }]
                 },
                 options: chartOptions
             });
 
-            // Humidity Chart
             chartInstances.humidity = new Chart(humidityCtx, {
                 type: 'line',
                 data: {
@@ -1774,13 +2759,15 @@
                         data: [],
                         borderColor: '#03A9F4',
                         backgroundColor: 'rgba(3, 169, 244, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#03A9F4'
                     }]
                 },
                 options: chartOptions
             });
 
-            // Pig Temperature Chart
             chartInstances.bodyTemp = new Chart(bodyTempCtx, {
                 type: 'line',
                 data: {
@@ -1790,7 +2777,10 @@
                         data: [],
                         borderColor: '#FF4081',
                         backgroundColor: 'rgba(255, 64, 129, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#FF4081'
                     }]
                 },
                 options: chartOptions
@@ -1803,7 +2793,6 @@
             const filter = document.getElementById('dataFilter').value;
             const customDate = document.getElementById('customDate').value;
 
-            // Simulate chart data updates
             const now = new Date();
             const labels = [];
             const tempData = [];
@@ -1818,7 +2807,6 @@
                 pigTempData.push(38 + Math.random() * 3);
             }
 
-            // Update charts
             chartInstances.temperature.data.labels = labels;
             chartInstances.temperature.data.datasets[0].data = tempData;
             chartInstances.temperature.update();
@@ -1836,24 +2824,36 @@
         function addNotification(title, message, type) {
             const notificationsList = document.getElementById('notificationsList');
             
+            const iconMap = {
+                'error': 'fa-exclamation-circle',
+                'warning': 'fa-exclamation-triangle',
+                'success': 'fa-check-circle',
+                'info': 'fa-info-circle'
+            };
+
             const notificationEl = document.createElement('div');
-            notificationEl.className = `alert alert-${type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'success'}`;
+            notificationEl.className = `alert alert-${type}`;
             notificationEl.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <strong>${title}</strong>
-                        <div style="margin-top: 0.25rem;">${message}</div>
-                        <small style="opacity: 0.7;">${new Date().toLocaleString()}</small>
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <i class="fas ${iconMap[type] || 'fa-bell'}" style="font-size: 1.3rem;"></i>
+                            <strong style="font-size: 1.05rem;">${title}</strong>
+                        </div>
+                        <div style="margin-left: 2.05rem; line-height: 1.5;">${message}</div>
+                        <small style="opacity: 0.7; margin-left: 2.05rem; display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-clock" style="margin-right: 0.3rem;"></i>${new Date().toLocaleString()}
+                        </small>
                     </div>
-                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer;">
-                        <i class="fas fa-times"></i>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: none; border: none; cursor: pointer; padding: 0.5rem; margin-left: 1rem; opacity: 0.6; transition: opacity 0.2s;">
+                        <i class="fas fa-times" style="font-size: 1.2rem;"></i>
                     </button>
                 </div>
             `;
             
             notificationsList.insertBefore(notificationEl, notificationsList.firstChild);
 
-            // Save to Firebase
             if (currentUser) {
                 firestore.collection('notifications').add({
                     title: title,
@@ -1879,254 +2879,444 @@
         }
 
         // Reports Generation
-        function generateReport() {
-            const startDate = document.getElementById('reportStartDate').value;
-            const endDate = document.getElementById('reportEndDate').value;
+function generateReport() {
+    const startDate = document.getElementById('reportStartDate').value;
+    const endDate = document.getElementById('reportEndDate').value;
 
-            if (!startDate || !endDate) {
-                showNotification('Please select both start and end dates', 'error');
-                return;
-            }
+    if (!startDate || !endDate) {
+        showNotification('Please select both start and end dates', 'error');
+        return;
+    }
 
-            generatePDFReport(startDate, endDate);
+    generatePDFReport(startDate, endDate);
+}
+
+async function generatePDFReport(startDate, endDate) {
+    try {
+        const pigsSnapshot = await firestore.collection('pigs')
+            .where('userId', '==', currentUser.uid)
+            .get();
+
+        const historySnapshot = await firestore.collection('pigEditHistory')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('timestamp', 'desc')
+            .get();
+
+        const sensorSnapshot = await database.ref(`sensorData/${currentUser.uid}`).limitToLast(100).once('value');
+        const sensorData = [];
+        sensorSnapshot.forEach(child => {
+            sensorData.push(child.val());
+        });
+
+        // Calculate average temperature and humidity
+        const avgTemp = sensorData.length > 0 
+            ? (sensorData.reduce((sum, d) => sum + d.temperature, 0) / sensorData.length).toFixed(2)
+            : 0;
+        const avgHumidity = sensorData.length > 0 
+            ? (sensorData.reduce((sum, d) => sum + d.humidity, 0) / sensorData.length).toFixed(2)
+            : 0;
+
+        // Temperature status
+        let tempStatus = 'Normal';
+        let tempColor = '#4CAF50';
+        if (avgTemp < 30) {
+            tempStatus = 'Abnormal - Cold';
+            tempColor = '#2196F3';
+        } else if (avgTemp > 34) {
+            tempStatus = 'Abnormal - Hot';
+            tempColor = '#F44336';
         }
 
-        async function generatePDFReport(startDate, endDate) {
-            try {
-                // Get pigs data
-                const pigsSnapshot = await firestore.collection('pigs')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
+        // Humidity status
+        let humidityStatus = 'Normal';
+        let humidityColor = '#4CAF50';
+        if (avgHumidity < 40) {
+            humidityStatus = 'Abnormal - Too Dry';
+            humidityColor = '#FF9800';
+        } else if (avgHumidity > 75) {
+            humidityStatus = 'Abnormal - Too Humid';
+            humidityColor = '#F44336';
+        }
 
-                let totalPigs = 0;
-                let totalWeight = 0;
-                let healthyPigs = 0;
-                let soldPigs = 0;
-                const pigsData = [];
+        let totalPigs = 0;
+        let totalWeight = 0;
+        let activePigs = 0;
+        let soldPigs = 0;
+        const pigsData = [];
+        const pigHistoryMap = {};
 
-                pigsSnapshot.forEach(doc => {
-                    const pig = doc.data();
-                    pigsData.push(pig);
-                    totalPigs++;
-                    totalWeight += pig.weight;
-                    if (pig.status === 'healthy') healthyPigs++;
-                    if (pig.status === 'sold') soldPigs++;
-                });
+        pigsSnapshot.forEach(doc => {
+            const pig = doc.data();
+            pigsData.push({ id: doc.id, ...pig });
+            totalPigs++;
+            totalWeight += pig.weight;
+            if (pig.status === 'active') activePigs++;
+            if (pig.status === 'sold') soldPigs++;
+        });
 
-                // Create PDF content
-                const reportContent = document.getElementById('reportContent');
-                reportContent.innerHTML = `
-                    <div id="pdfContent" style="font-family: Arial, sans-serif; padding: 2rem;">
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <h1 style="color: #E91E63; margin-bottom: 0.5rem;">SwineCare Report</h1>
-                            <p style="color: #666;">Swine Health Monitoring Report</p>
-                            <p style="color: #666;">Period: ${startDate} to ${endDate}</p>
+        historySnapshot.forEach(doc => {
+            const history = doc.data();
+            if (!pigHistoryMap[history.pigId]) {
+                pigHistoryMap[history.pigId] = [];
+            }
+            pigHistoryMap[history.pigId].push(history);
+        });
+
+        const reportContent = document.getElementById('reportContent');
+        reportContent.innerHTML = `
+            <div id="pdfContent" style="font-family: 'Inter', Arial, sans-serif; padding: 2rem;">
+                <div style="text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 3px solid #E91E63;">
+                    <div style="background: linear-gradient(135deg, #E91E63, #C2185B); color: white; padding: 2rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h1 style="margin-bottom: 0.5rem; font-size: 2.2rem; font-weight: 800;">SwineCare Management Report</h1>
+                        <p style="font-size: 1.1rem; opacity: 0.95;">Comprehensive Pig Management Summary</p>
+                        <p style="opacity: 0.9; margin-top: 0.5rem;">Period: ${startDate} to ${endDate}</p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2.5rem;">
+                    <h2 style="color: #C2185B; margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 700; border-left: 4px solid #E91E63; padding-left: 1rem;">
+                        Pig Management Summary
+                    </h2>
+                    
+                    ${pigsData.map(pig => {
+                        const history = pigHistoryMap[pig.id] || [];
+                        return `
+                            <div style="margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #E8E8E8;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid #FCE4EC;">
+                                    <div>
+                                        <h3 style="color: #E91E63; margin-bottom: 0.3rem; font-size: 1.3rem;">Pig Tag: ${pig.tagNumber}</h3>
+                                        <p style="color: #666; margin: 0;">Breed: ${pig.breed} | Gender: ${pig.gender}</p>
+                                    </div>
+                                    <span style="padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; background: ${pig.status === 'active' ? 'rgba(76, 175, 80, 0.12)' : 'rgba(244, 67, 54, 0.12)'}; color: ${pig.status === 'activer' ? '#4CAF50' : '#F44336'};">
+                                        ${pig.status.toUpperCase()}
+                                    </span>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="background: rgba(233, 30, 99, 0.05); padding: 1rem; border-radius: 8px;">
+                                        <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem;">Current Age</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: #E91E63;">${pig.age} <span style="font-size: 0.9rem;">months</span></div>
+                                    </div>
+                                    <div style="background: rgba(33, 150, 243, 0.05); padding: 1rem; border-radius: 8px;">
+                                        <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem;">Current Weight</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: #2196F3;">${pig.weight} <span style="font-size: 0.9rem;">kg</span></div>
+                                    </div>
+                                    <div style="background: rgba(156, 39, 176, 0.05); padding: 1rem; border-radius: 8px;">
+                                        <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem;">Current Length</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: #9C27B0;">${pig.length} <span style="font-size: 0.9rem;">cm</span></div>
+                                    </div>
+                                </div>
+
+                                ${history.length > 0 ? `
+                                    <div style="background: #F5F5F5; padding: 1rem; border-radius: 8px;">
+                                        <h4 style="color: #C2185B; margin-bottom: 0.8rem; font-size: 1rem;"><i class="fas fa-history"></i> Change History</h4>
+                                        ${history.map(h => {
+                                            const date = new Date(h.timestamp).toLocaleDateString();
+                                            return `
+                                                <div style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 6px;">
+                                                    <small style="color: #666; font-weight: 600;">${date}:</small>
+                                                    ${h.changes.age ? `<span style="margin-left: 0.5rem;">Age: <span style="color: #F44336;">${h.changes.age.old}</span> → <span style="color: #4CAF50;">${h.changes.age.new}</span> months</span>` : ''}
+                                                    ${h.changes.weight ? `<span style="margin-left: 0.5rem;">Weight: <span style="color: #F44336;">${h.changes.weight.old}</span> → <span style="color: #4CAF50;">${h.changes.weight.new}</span> kg</span>` : ''}
+                                                    ${h.changes.length ? `<span style="margin-left: 0.5rem;">Length: <span style="color: #F44336;">${h.changes.length.old}</span> → <span style="color: #4CAF50;">${h.changes.length.new}</span> cm</span>` : ''}
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                ` : '<div style="background: #F5F5F5; padding: 1rem; border-radius: 8px; text-align: center; color: #666;">No changes recorded yet.</div>'}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div style="margin-bottom: 2.5rem;">
+                    <h2 style="color: #C2185B; margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 700; border-left: 4px solid #E91E63; padding-left: 1rem;">
+                        Environmental Conditions
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #E8E8E8;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background: rgba(233, 30, 99, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-thermometer-half" style="color: #E91E63; font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666; font-weight: 700; text-transform: uppercase;">Ambient Temperature</div>
+                                    <div style="font-size: 1.8rem; font-weight: 800; color: ${tempColor};">${avgTemp}°C</div>
+                                </div>
+                            </div>
+                            <div style="padding: 0.8rem; background: ${tempColor}15; border-left: 4px solid ${tempColor}; border-radius: 8px;">
+                                <strong style="color: ${tempColor};">Status: ${tempStatus}</strong>
+                                <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">
+                                    ${avgTemp >= 30 && avgTemp <= 34 ? '✓ Temperature is within normal range (30°C - 34°C)' : 
+                                      avgTemp < 30 ? '⚠ Temperature is below normal range (&lt; 30°C)' : 
+                                      '⚠ Temperature is above normal range (&gt; 34°C)'}
+                                </div>
+                            </div>
                         </div>
 
-                        <div style="margin-bottom: 2rem;">
-                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Summary</h2>
-                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
-                                <tr style="background: #FCE4EC;">
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Total Registered Pigs</td>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${totalPigs}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Total Weight</td>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${totalWeight.toFixed(1)} kg</td>
-                                </tr>
-                                <tr style="background: #FCE4EC;">
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Healthy Pigs</td>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${healthyPigs}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Sold Pigs</td>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${soldPigs}</td>
-                                </tr>
-                                <tr style="background: #FCE4EC;">
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold;">Estimated Feed Consumption</td>
-                                    <td style="padding: 0.75rem; border: 1px solid #ddd;">${(totalPigs * 2.5).toFixed(1)} kg/day</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Pig Inventory Details</h2>
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: #E91E63; color: white;">
-                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Tag #</th>
-                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Breed</th>
-                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Weight (kg)</th>
-                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Length (cm)</th>
-                                        <th style="padding: 0.75rem; border: 1px solid #ddd;">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${pigsData.map((pig, index) => `
-                                        <tr style="background: ${index % 2 === 0 ? '#FCE4EC' : 'white'};">
-                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.tagNumber}</td>
-                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.breed}</td>
-                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.weight}</td>
-                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.length}</td>
-                                            <td style="padding: 0.75rem; border: 1px solid #ddd;">${pig.status}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h2 style="color: #C2185B; margin-bottom: 1rem;">Health Observations</h2>
-                            <p style="margin-bottom: 1rem;">Clinical signs observed during the reporting period:</p>
-                            <ul style="margin-left: 2rem; line-height: 1.6;">
-                                <li>No significant lethargy observed in monitored pigs</li>
-                                <li>Normal respiratory patterns - no abnormal coughing detected</li>
-                                <li>No lameness detected in movement patterns</li>
-                                <li>Normal feeding behavior observed through automated monitoring</li>
-                                <li>Body temperature readings within normal range (38-40°C)</li>
-                            </ul>
-                        </div>
-
-                        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #ddd;">
-                            <p style="color: #666; font-size: 0.875rem;">
-                                Generated on ${new Date().toLocaleString()}<br>
-                                SwineCare IoT Monitoring System
-                            </p>
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #E8E8E8;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background: rgba(3, 169, 244, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-tint" style="color: #03A9F4; font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666; font-weight: 700; text-transform: uppercase;">Relative Humidity</div>
+                                    <div style="font-size: 1.8rem; font-weight: 800; color: ${humidityColor};">${avgHumidity}%</div>
+                                </div>
+                            </div>
+                            <div style="padding: 0.8rem; background: ${humidityColor}15; border-left: 4px solid ${humidityColor}; border-radius: 8px;">
+                                <strong style="color: ${humidityColor};">Status: ${humidityStatus}</strong>
+                                <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">
+                                    ${avgHumidity >= 50 && avgHumidity <= 70 ? '✓ Humidity is within normal range (50% - 70% RH)' : 
+                                      avgHumidity < 40 ? '⚠ Humidity is too low (&lt; 40% RH)' : 
+                                      avgHumidity > 75 ? '⚠ Humidity is too high (&gt; 75% RH)' :
+                                      '⚠ Humidity is slightly outside optimal range'}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                `;
+                </div>
 
-                // Generate PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const element = document.getElementById('pdfContent');
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    useCORS: true
-                });
-                
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210;
-                const pageHeight = 295;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                let heightLeft = imgHeight;
-                
-                let position = 0;
-                
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-                
-                pdf.save(`SwineCare_Report_${startDate}_to_${endDate}.pdf`);
-                showNotification('PDF report generated successfully!', 'success');
+                <div style="margin-bottom: 2.5rem;">
+                    <h2 style="color: #C2185B; margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 700; border-left: 4px solid #E91E63; padding-left: 1rem;">
+                        Overall Statistics
+                    </h2>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                        <div style="background: rgba(233, 30, 99, 0.08); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #E91E63; text-align: center;">
+                            <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Total Pigs</div>
+                            <div style="font-size: 2.2rem; font-weight: 800; color: #E91E63;">${totalPigs}</div>
+                        </div>
+                        <div style="background: rgba(76, 175, 80, 0.08); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #4CAF50; text-align: center;">
+                            <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Active</div>
+                            <div style="font-size: 2.2rem; font-weight: 800; color: #4CAF50;">${activePigs}</div>
+                        </div>
+                        <div style="background: rgba(244, 67, 54, 0.08); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #F44336; text-align: center;">
+                            <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Sold</div>
+                            <div style="font-size: 2.2rem; font-weight: 800; color: #F44336;">${soldPigs}</div>
+                        </div>
+                        <div style="background: rgba(3, 169, 244, 0.08); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #03A9F4; text-align: center;">
+                            <div style="font-size: 0.8rem; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Avg Weight</div>
+                            <div style="font-size: 2.2rem; font-weight: 800; color: #03A9F4;">${totalPigs > 0 ? (totalWeight / totalPigs).toFixed(1) : 0}<span style="font-size: 1rem;">kg</span></div>
+                        </div>
+                    </div>
+                </div>
 
-            } catch (error) {
-                showNotification(`Report generation failed: ${error.message}`, 'error');
-            }
+                <div style="text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 2px solid #E8E8E8;">
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.8;">
+                        <strong style="color: #E91E63;">Generated on:</strong> ${new Date().toLocaleString()}<br>
+                        <strong style="color: #E91E63;">SwineCare</strong> IoT Monitoring System<br>
+                        <em style="font-size: 0.85rem;">Professional Swine Health Management Solution</em>
+                    </p>
+                </div>
+            </div>
+        `;
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const element = document.getElementById('pdfContent');
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff'
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        
+        let position = 0;
+        
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        
+        pdf.save(`SwineCare_Management_Report_${startDate}_to_${endDate}.pdf`);
+        showNotification('PDF report generated successfully!', 'success');
+
+    } catch (error) {
+        showNotification(`Report generation failed: ${error.message}`, 'error');
+        console.error('Report generation error:', error);
+    }
+}
+
+// Setup Realtime Listeners
+function setupRealtimeListeners() {
+    if (!currentUser) return;
+
+    database.ref(`sensorData/${currentUser.uid}`).limitToLast(1).on('child_added', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('temperature').innerHTML = `${data.temperature}<span class="stat-unit">°C</span>`;
+            document.getElementById('humidity').innerHTML = `${data.humidity}<span class="stat-unit">%</span>`;
+            document.getElementById('pigBodyTemp').innerHTML = `${data.pigBodyTemp}<span class="stat-unit">°C</span>`;
+        }
+    });
+
+    firestore.collection('pigs')
+        .where('userId', '==', currentUser.uid)
+        .onSnapshot((snapshot) => {
+            loadPigs();
+        });
+}
+
+// Check for remembered user on page load
+window.addEventListener('load', () => {
+    if (localStorage.getItem('rememberMe') === 'true') {
+        const savedEmail = localStorage.getItem('userEmail');
+        if (savedEmail) {
+            document.getElementById('loginEmail').value = savedEmail;
+            document.getElementById('rememberMe').checked = true;
+        }
+    }
+
+    const today = new Date();
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    document.getElementById('reportStartDate').value = weekAgo.toISOString().split('T')[0];
+    document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
+});
+
+// Auth State Observer
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        currentUser = user;
+        showMainApp();
+        startDataSimulation();
+    } else {
+        currentUser = null;
+        stopDataSimulation();
+        document.getElementById('authContainer').style.display = 'flex';
+        document.getElementById('appContainer').style.display = 'none';
+    }
+});
+
+// Initialize charts when statistics page is shown
+let chartsInitialized = false;
+const originalShowPage = showPage;
+showPage = function(pageId) {
+    originalShowPage.call(this, pageId);
+    if (pageId === 'statistics' && !chartsInitialized) {
+        setTimeout(() => {
+            initializeCharts();
+            updateCharts();
+            chartsInitialized = true;
+        }, 100);
+    }
+};
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const sellModal = document.getElementById('sellPigModal');
+    const deleteModal = document.getElementById('deletePigModal');
+    const editModal = document.getElementById('editPigModal');
+    const historyModal = document.getElementById('historyModal');
+    
+    if (event.target === sellModal) {
+        closeSellModal();
+    }
+    if (event.target === deleteModal) {
+        closeDeleteModal();
+    }
+    if (event.target === editModal) {
+        closeEditModal();
+    }
+    if (event.target === historyModal) {
+        closeHistoryModal();
+    }
+};
+
+// Add sample notifications on load
+setTimeout(() => {
+    if (currentUser) {
+        addNotification('System Started', 'SwineCare monitoring system is now active', 'info');
+    }
+}, 2000);
+
+// Periodic health checks
+setInterval(() => {
+    if (currentUser && Math.random() < 0.1) {
+        const alerts = [
+            { title: 'Feed Level Low', message: 'Automatic feeder needs refill', type: 'warning' },
+            { title: 'Normal Health Check', message: 'All pigs showing normal behavior', type: 'success' },
+            { title: 'Cleaning Reminder', message: 'Pen cleaning scheduled for today', type: 'info' }
+        ];
+        const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+        addNotification(randomAlert.title, randomAlert.message, randomAlert.type);
+    }
+}, 30000);
+
+// Mobile Sidebar Toggle
+const sidebar = document.getElementById('sidebar');
+const mainContent = document.getElementById('mainContent');
+const menuBtn = document.querySelector('.mobile-menu-btn');
+
+if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('show');
+        mainContent.classList.toggle('full-width');
+    });
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('show');
+            mainContent.classList.remove('full-width');
+        }
+    });
+});
+
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove('show');
+            mainContent.classList.remove('full-width');
+        }
+    }
+});
+
+        // Mobile Sidebar Toggle (reuse existing variables, avoid redeclaration)
+        // If sidebar/mainContent/menuBtn are already declared above, reuse them; otherwise fall back to querying the DOM.
+        const _sidebarExists = (typeof sidebar !== 'undefined');
+        const _mainContentExists = (typeof mainContent !== 'undefined');
+        const _menuBtnExists = (typeof menuBtn !== 'undefined');
+
+        const _sidebar = _sidebarExists ? sidebar : document.getElementById('sidebar');
+        const _mainContent = _mainContentExists ? mainContent : document.getElementById('mainContent');
+        const _menuBtn = _menuBtnExists ? menuBtn : document.querySelector('.mobile-menu-btn');
+
+        if (_menuBtn) {
+            _menuBtn.addEventListener('click', () => {
+                if (_sidebar) _sidebar.classList.toggle('show');
+                if (_mainContent) _mainContent.classList.toggle('full-width');
+            });
         }
 
-        // Setup Realtime Listeners
-        function setupRealtimeListeners() {
-            if (!currentUser) return;
-
-            // Listen for sensor data changes
-            database.ref(`sensorData/${currentUser.uid}`).limitToLast(1).on('child_added', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('temperature').innerHTML = `${data.temperature}<span class="stat-unit">°C</span>`;
-                    document.getElementById('humidity').innerHTML = `${data.humidity}<span class="stat-unit">%</span>`;
-                    document.getElementById('pigBodyTemp').innerHTML = `${data.pigBodyTemp}<span class="stat-unit">°C</span>`;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    if (_sidebar) _sidebar.classList.remove('show');
+                    if (_mainContent) _mainContent.classList.remove('full-width');
                 }
             });
+        });
 
-            // Listen for pig changes
-            firestore.collection('pigs')
-                .where('userId', '==', currentUser.uid)
-                .onSnapshot((snapshot) => {
-                    loadPigs();
-                });
-        }
-
-        // Check for remembered user on page load
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('rememberMe') === 'true') {
-                const savedEmail = localStorage.getItem('userEmail');
-                if (savedEmail) {
-                    document.getElementById('loginEmail').value = savedEmail;
-                    document.getElementById('rememberMe').checked = true;
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && _sidebar && _sidebar.classList.contains('show')) {
+                if (!_sidebar.contains(e.target) && (_menuBtn ? !_menuBtn.contains(e.target) : true)) {
+                    _sidebar.classList.remove('show');
+                    if (_mainContent) _mainContent.classList.remove('full-width');
                 }
             }
-
-            // Set default dates for report
-            const today = new Date();
-            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-            document.getElementById('reportStartDate').value = weekAgo.toISOString().split('T')[0];
-            document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
         });
-
-        // Auth State Observer
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                showMainApp();
-                startDataSimulation();
-            } else {
-                currentUser = null;
-                stopDataSimulation();
-                document.getElementById('authContainer').style.display = 'flex';
-                document.getElementById('appContainer').style.display = 'none';
-            }
-        });
-
-        // Initialize charts when statistics page is first shown
-        let chartsInitialized = false;
-        const originalShowPage = showPage;
-        showPage = function(pageId) {
-            originalShowPage.call(this, pageId);
-            if (pageId === 'statistics' && !chartsInitialized) {
-                setTimeout(() => {
-                    initializeCharts();
-                    updateCharts();
-                    chartsInitialized = true;
-                }, 100);
-            }
-        };
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('sellPigModal');
-            if (event.target === modal) {
-                closeSellModal();
-            }
-        };
-
-        // Add some sample notifications on load
-        setTimeout(() => {
-            if (currentUser) {
-                addNotification('System Started', 'SwineCare monitoring system is now active', 'info');
-            }
-        }, 2000);
-
-        // Simulate periodic health checks
-        setInterval(() => {
-            if (currentUser && Math.random() < 0.1) { // 10% chance every interval
-                const alerts = [
-                    { title: 'Feed Level Low', message: 'Automatic feeder needs refill', type: 'warning' },
-                    { title: 'Normal Health Check', message: 'All pigs showing normal behavior', type: 'success' },
-                    { title: 'Cleaning Reminder', message: 'Pen cleaning scheduled for today', type: 'info' }
-                ];
-                const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
-                addNotification(randomAlert.title, randomAlert.message, randomAlert.type);
-            }
-        }, 30000); // Every 30 seconds
     </script>
 </body>
 </html>
-
